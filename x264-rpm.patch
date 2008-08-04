@@ -1,0 +1,156 @@
+diff -up x264-20080420/Makefile.r x264-20080420/Makefile
+--- x264-20080420/Makefile.r	2008-04-20 00:21:48.000000000 +0200
++++ x264-20080420/Makefile	2008-05-04 21:39:38.000000000 +0200
+@@ -69,7 +69,7 @@ DEP  = depend
+ 
+ .PHONY: all default fprofiled clean distclean install install-gtk uninstall dox test testclean
+ 
+-default: $(DEP) x264$(EXE)
++default: $(DEP) x264$(EXE) x264_gtk_encode$(EXE)
+ 
+ libx264.a: .depend $(OBJS) $(OBJASM)
+ 	ar rc libx264.a $(OBJS) $(OBJASM)
+@@ -77,15 +77,16 @@ libx264.a: .depend $(OBJS) $(OBJASM)
+ 
+ $(SONAME): .depend $(OBJS) $(OBJASM)
+ 	$(CC) -shared -o $@ $(OBJS) $(OBJASM) $(SOFLAGS) $(LDFLAGS)
++	ln -s $(SONAME) libx264.so
+ 
+-x264$(EXE): $(OBJCLI) libx264.a 
+-	$(CC) -o $@ $+ $(LDFLAGS)
++x264$(EXE): $(OBJCLI) $(SONAME)
++	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
+ 
+-libx264gtk.a: muxers.o libx264.a
++x264_gtk_encode$(EXE): muxers.o $(SONAME)
+ 	$(MAKE) -C gtk
+ 
+-checkasm: tools/checkasm.o libx264.a
+-	$(CC) -o $@ $+ $(LDFLAGS)
++checkasm: tools/checkasm.o $(SONAME)
++	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
+ 
+ %.o: %.asm
+ 	$(AS) $(ASFLAGS) -o $@ $<
+@@ -152,10 +153,8 @@ install: x264$(EXE) $(SONAME)
+ 	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(includedir)
+ 	install -d $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
+ 	install -m 644 x264.h $(DESTDIR)$(includedir)
+-	install -m 644 libx264.a $(DESTDIR)$(libdir)
+ 	install -m 644 x264.pc $(DESTDIR)$(libdir)/pkgconfig
+ 	install x264$(EXE) $(DESTDIR)$(bindir)
+-	ranlib $(DESTDIR)$(libdir)/libx264.a
+ ifeq ($(SYS),MINGW)
+ 	$(if $(SONAME), install -m 755 $(SONAME) $(DESTDIR)$(bindir))
+ else
+@@ -164,7 +163,7 @@ else
+ endif
+ 	$(if $(IMPLIBNAME), install -m 644 $(IMPLIBNAME) $(DESTDIR)$(libdir))
+ 
+-install-gtk: libx264gtk.a
++install-gtk: x264_gtk_encode$(EXE)
+ 	$(MAKE) -C gtk install
+ 
+ uninstall:
+diff -up x264-20080420/gtk/Makefile.r x264-20080420/gtk/Makefile
+--- x264-20080420/gtk/Makefile.r	2008-04-20 00:21:48.000000000 +0200
++++ x264-20080420/gtk/Makefile	2008-05-04 21:34:42.000000000 +0200
+@@ -46,14 +46,14 @@ SOURCES_ALL = $(OBJECTS_ALL:%.o=%.c)
+ 
+ X264GTK_PC = x264gtk.pc
+ 
+-EXTERNAL_DEPS= ../muxers.o ../matroska.o ../libx264.a
++EXTERNAL_DEPS= ../muxers.o ../matroska.o $(SONAME)
+ 
+ 
+ all: $(ENCODE_BIN) $(TEST_BIN) $(MO_FILES) $(X264GTK_PC)
+ 
+ # Already provides iconv/intl
+ CPPFLAGS = -g `pkg-config --cflags gtk+-2.0 gthread-2.0` -I.. -DX264_DATA_DIR=\"${datadir}\"
+-LDFLAGS += `pkg-config --libs gtk+-2.0 gthread-2.0` ../libx264.a
++LDFLAGS += `pkg-config --libs gtk+-2.0 gthread-2.0` -L.. -lx264
+ 
+ 
+ # gettext rules
+@@ -86,11 +86,6 @@ x264_icon.h: x264.ico
+ 
+ 
+ # Linking rule
+-libx264gtk.a: $(OBJECTS_LIB)
+-	@echo "  L: $(@F)"
+-	@ar rc libx264gtk.a $(OBJECTS_LIB)
+-	@ranlib libx264gtk.a
+-
+ $(SONAMEGTK): $(OBJECTS_LIB)
+ 	@echo "  L: $(@F)"
+ 	@$(CC) -shared -o $@ $(OBJECTS_LIB) -Wl,-soname,$(SONAMEGTK) $(LDFLAGS)
+@@ -102,7 +97,7 @@ $(TEST_BIN): $(OBJECTS_LIB) $(OBJECTS_TE
+ 	@$(CC) -o $(TEST_BIN) $(OBJECTS_LIB) $(OBJECTS_TEST) $(LDFLAGS) $(ICONV_LIB)
+ 
+ # Program : x264_gtk_encode
+-$(ENCODE_BIN): x264_icon.h libx264gtk.a $(SONAMEGTK) $(OBJECTS_ENCODE) $(EXTERNAL_DEPS) $(X264GTK_O)
++$(ENCODE_BIN): x264_icon.h $(SONAMEGTK) $(OBJECTS_ENCODE) $(EXTERNAL_DEPS) $(X264GTK_O)
+ 	@echo "  B: $(@F)"
+ 	@$(CC) -o $(ENCODE_BIN) $(OBJECTS_LIB) $(OBJECTS_ENCODE) $(EXTERNAL_DEPS) $(LDFLAGS) $(X264GTK_O)
+ 
+@@ -110,17 +105,17 @@ $(ENCODE_BIN): x264_icon.h libx264gtk.a 
+ $(X264GTK_PC):
+ 	@echo "  S: $(X264GTK_PC)"
+ 	@rm -f $(X264GTK_PC)
+-	@echo "prefix=$(DESTDIR)${prefix}" > $(X264GTK_PC)
+-	@echo "exec_prefix=$(DESTDIR)${exec_prefix}" >> $(X264GTK_PC)
+-	@echo "libdir=$(DESTDIR)${libdir}" >> $(X264GTK_PC)
+-	@echo "includedir=$(DESTDIR)${includedir}" >> $(X264GTK_PC)
++	@echo "prefix=${prefix}" > $(X264GTK_PC)
++	@echo "exec_prefix=${exec_prefix}" >> $(X264GTK_PC)
++	@echo "libdir=${libdir}" >> $(X264GTK_PC)
++	@echo "includedir=${includedir}" >> $(X264GTK_PC)
+ 	@echo "" >> $(X264GTK_PC)
+ 	@echo "Name: Gtk+ interface for X264" >> $(X264GTK_PC)
+ 	@echo "Description: Gtk+ interface to configure X264" >> $(X264GTK_PC)
+ 	@echo "Requires: x264" >> $(X264GTK_PC)
+ 	@echo "Version: 0.1" >> $(X264GTK_PC)
+-	@echo "Libs: -L$(DESTDIR)$(libdir) -lx264gtk" >> $(X264GTK_PC)
+-	@echo "Cflags: -I$(DESTDIR)$(includedir)" >> $(X264GTK_PC)
++	@echo "Libs: -L$(libdir) -lx264gtk" >> $(X264GTK_PC)
++	@echo "Cflags: -I$(includedir)" >> $(X264GTK_PC)
+ 
+ # Clean rule
+ clean:
+@@ -140,8 +135,6 @@ install: $(ENCODE_BIN)
+ 	@install -m 644 x264_gtk_enum.h "$(DESTDIR)$(includedir)"
+ 	@echo "  D: $(DESTDIR)$(libdir)"
+ 	@install -d "$(DESTDIR)$(libdir)"
+-	@echo "  I: $(DESTDIR)$(libdir)/libx264gtk.a"
+-	@install -m 644 libx264gtk.a "$(DESTDIR)$(libdir)"
+ 	@echo "  I: $(DESTDIR)$(libdir)/libx264gtk.so"
+ 	@$(if $(SONAMEGTK), ln -sf $(SONAMEGTK) $(DESTDIR)$(libdir)/libx264gtk.so)
+ 	@$(if $(SONAMEGTK), install -m 755 $(SONAMEGTK) $(DESTDIR)$(libdir))
+diff -up x264-20080420/configure.r x264-20080420/configure
+--- x264-20080420/configure.r	2008-04-20 00:21:48.000000000 +0200
++++ x264-20080420/configure	2008-05-04 21:35:24.000000000 +0200
+@@ -235,6 +235,7 @@ esac
+ case $host_cpu in
+   i*86)
+     ARCH="X86"
++    LDFLAGS="$LDFLAGS -m32"
+     AS="yasm"
+     ASFLAGS="-O2"
+     if [ "$SYS" = MACOSX ]; then
+@@ -372,7 +373,7 @@ if test "$pthread" = "yes" ; then
+     LDFLAGS="$LDFLAGS $libpthread"
+ fi
+ 
+-MP4_LDFLAGS="-lgpac_static"
++MP4_LDFLAGS="-lgpac"
+ if [ $SYS = MINGW ]; then
+     MP4_LDFLAGS="$MP4_LDFLAGS -lwinmm"
+ fi
+@@ -477,7 +478,6 @@ if [ "$shared" = "yes" ]; then
+ fi
+ 
+ if [ "$gtk" = "yes" ]; then
+-    echo 'default: libx264gtk.a' >> config.mak
+     echo 'install: install-gtk' >> config.mak
+ fi
+ 
