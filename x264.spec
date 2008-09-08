@@ -1,9 +1,9 @@
-%define	snapshot 20080905
+%define	snapshot 20080613
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.16.%{snapshot}%{?dist}
+Release: 0.15.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -17,11 +17,14 @@ BuildRequires: desktop-file-utils
 BuildRequires: git-core
 BuildRequires: gtk2-devel
 BuildRequires: gettext
-BuildRequires: gpac-devel
 BuildRequires: ImageMagick
-%ifarch x86_64 %{ix86}
+%ifarch %{ix86}
+BuildRequires: nasm
+%endif
+%ifarch x86_64
 BuildRequires: yasm
 %endif
+%{?_with_gpac:BuildRequires: gpac-devel}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -85,11 +88,13 @@ This package contains the GUI development files.
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
+# configure hardcodes X11 lib path
+%{__perl} -pi -e 's|/usr/X11R6/lib |%{_libdir} |g' configure
+%{__perl} -pi -e 's|^MACHINE=.*|MACHINE=%{_build}|' configure
 convert gtk/x264.ico x264icon.png
 
 %build
 ./configure \
-	--host=%{_target_platform} \
 	--prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} \
 	--bindir=%{_bindir} \
@@ -172,13 +177,6 @@ fi
 %{_libdir}/pkgconfig/%{name}gtk.pc
 
 %changelog
-* Fri Sep 05 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.16.20080905
-- 20080905 snapshot
-- use yasm on all supported arches
-- include mp4 output support via gpac by default
-- drop/move obsolete fixups from %%prep
-- fix icon filename in desktop file
-
 * Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.0.0-0.15.20080613
 - rebuild
 
