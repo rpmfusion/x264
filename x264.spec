@@ -3,7 +3,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.16.%{snapshot}%{?dist}
+Release: 0.17.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -22,6 +22,7 @@ BuildRequires: ImageMagick
 %ifarch x86_64 %{ix86}
 BuildRequires: yasm
 %endif
+Requires: %{name}-libs = %{version}-%{release}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -32,7 +33,7 @@ This package contains the frontend.
 %package libs
 Summary: Library for encoding H264/AVC video streams
 Group: Development/Libraries
-Obsoletes: x264 < 0.0.0-0.13.2008420
+Obsoletes: x264 < 0.0.0-0.13.20080420
 
 %description libs
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -79,6 +80,22 @@ scratch.
 
 This package contains the GUI development files.
 
+%define x_configure \
+./configure \\\
+	--host=%{_target_platform} \\\
+	--prefix=%{_prefix} \\\
+	--exec-prefix=%{_exec_prefix} \\\
+	--bindir=%{_bindir} \\\
+	--includedir=%{_includedir} \\\
+	--extra-cflags="$RPM_OPT_FLAGS" \\\
+	%{?_with_gpac:--enable-mp4-output} \\\
+	%{?_with_visualize:--enable-visualize} \\\
+	--enable-pthread \\\
+	--enable-debug \\\
+	--enable-shared \\\
+	--enable-pic
+
+
 %prep
 %setup -q -n %{name}-%{snapshot}
 %patch0 -p1 -b .r
@@ -86,25 +103,29 @@ This package contains the GUI development files.
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
 convert gtk/x264.ico x264icon.png
+%ifarch %{ix86}
+mkdir sse2
+cp -a `ls -1|grep -v sse2` sse2/
+%endif
 
 %build
-./configure \
-	--host=%{_target_platform} \
-	--prefix=%{_prefix} \
-	--exec-prefix=%{_exec_prefix} \
-	--bindir=%{_bindir} \
-	--includedir=%{_includedir} \
+%{x_configure}\
 	--libdir=%{_libdir} \
-	--extra-cflags="$RPM_OPT_FLAGS" \
-	%{?_with_gpac:--enable-mp4-output} \
-	%{?_with_visualize:--enable-visualize} \
-	--enable-pthread \
-	--enable-debug \
-	--enable-shared \
 	--enable-gtk \
-	--enable-pic
+%ifarch %{ix86}
+	--disable-asm
+%endif
 
 %{__make} %{?_smp_mflags}
+%ifarch %{ix86}
+pushd sse2
+%{x_configure}\
+	--libdir=%{_libdir}/sse2 \
+	--disable-gtk
+
+%{__make} %{?_smp_mflags}
+popd
+%endif
 
 %install
 %{__rm} -rf %{buildroot}
@@ -117,6 +138,13 @@ desktop-file-install --vendor livna			\
 
 %{__install} -Dpm 644 x264icon.png \
 	%{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+
+%ifarch %{ix86}
+pushd sse2
+%{__make} DESTDIR=%{buildroot} install
+popd
+rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
+%endif
 
 %find_lang %{name}_gtk
 
@@ -149,6 +177,9 @@ fi
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
+%ifarch %{ix86}
+%{_libdir}/sse2/libx264.so.*
+%endif
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -156,6 +187,9 @@ fi
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
+%ifarch %{ix86}
+%{_libdir}/sse2/libx264.so
+%endif
 
 %files gui -f %{name}_gtk.lang
 %defattr(644, root, root, 0755)
@@ -172,6 +206,10 @@ fi
 %{_libdir}/pkgconfig/%{name}gtk.pc
 
 %changelog
+* Fri Nov 07 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.17.20080905
+- build libs without asm optimizations for less capable x86 CPUs (livna bug #2066)
+- fix missing 0 in Obsoletes version (never caused any problems)
+
 * Fri Sep 05 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.16.20080905
 - 20080905 snapshot
 - use yasm on all supported arches
