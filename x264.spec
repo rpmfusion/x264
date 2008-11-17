@@ -3,7 +3,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.17.%{snapshot}%{?dist}
+Release: 0.18.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -103,29 +103,13 @@ This package contains the GUI development files.
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
 convert gtk/x264.ico x264icon.png
-%ifarch %{ix86}
-mkdir sse2
-cp -a `ls -1|grep -v sse2` sse2/
-%endif
 
 %build
 %{x_configure}\
 	--libdir=%{_libdir} \
 	--enable-gtk \
-%ifarch %{ix86}
-	--disable-asm
-%endif
 
 %{__make} %{?_smp_mflags}
-%ifarch %{ix86}
-pushd sse2
-%{x_configure}\
-	--libdir=%{_libdir}/sse2 \
-	--disable-gtk
-
-%{__make} %{?_smp_mflags}
-popd
-%endif
 
 %install
 %{__rm} -rf %{buildroot}
@@ -138,13 +122,6 @@ desktop-file-install --vendor livna			\
 
 %{__install} -Dpm 644 x264icon.png \
 	%{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-
-%ifarch %{ix86}
-pushd sse2
-%{__make} DESTDIR=%{buildroot} install
-popd
-rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
-%endif
 
 %find_lang %{name}_gtk
 
@@ -177,9 +154,6 @@ fi
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
-%ifarch %{ix86}
-%{_libdir}/sse2/libx264.so.*
-%endif
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -187,9 +161,6 @@ fi
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
-%ifarch %{ix86}
-%{_libdir}/sse2/libx264.so
-%endif
 
 %files gui -f %{name}_gtk.lang
 %defattr(644, root, root, 0755)
@@ -206,6 +177,10 @@ fi
 %{_libdir}/pkgconfig/%{name}gtk.pc
 
 %changelog
+* Mon Nov 17 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.18.20080905
+- partially revert latest changes (the separate sse2 libs part) until selinux
+  policy catches up
+
 * Fri Nov 07 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.17.20080905
 - build libs without asm optimizations for less capable x86 CPUs (livna bug #2066)
 - fix missing 0 in Obsoletes version (never caused any problems)
