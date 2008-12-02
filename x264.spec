@@ -1,28 +1,23 @@
-%define	snapshot 20080905
+%define snapshot 20081202
+%define git 71d34b4
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.18.%{snapshot}%{?dist}
+Release: 0.19.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
-Source2: %{name}.desktop
 Patch0: %{name}-rpm.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
-BuildRequires: desktop-file-utils
-# version.sh requires git
-BuildRequires: git-core
-BuildRequires: gtk2-devel
-BuildRequires: gettext
 BuildRequires: gpac-devel
-BuildRequires: ImageMagick
 %ifarch x86_64 %{ix86}
 BuildRequires: yasm
 %endif
 Requires: %{name}-libs = %{version}-%{release}
+Obsoletes: %{name}-gui < 0.0.0-0.19
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -51,35 +46,6 @@ scratch.
 
 This package contains the development files.
 
-%package gui
-Summary: GUI for x264 encoder
-Group: Applications/Multimedia
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
-Obsoletes: %{name}-gtk < %{version}-%{release}
-Provides: %{name}-gtk = %{version}-%{release}
-
-%description gui
-x264 is a free library for encoding H264/AVC video streams, written from
-scratch.
-
-This package contains the GTK GUI.
-
-%package gui-devel
-Summary: Development files for the x264 encoder GUI
-Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
-Requires: %{name}-gui = %{version}-%{release}
-Requires: pkgconfig
-Obsoletes: %{name}-gtk-devel < %{version}-%{release}
-Provides: %{name}-gtk-devel = %{version}-%{release}
-
-%description gui-devel
-x264 is a free library for encoding H264/AVC video streams, written from
-scratch.
-
-This package contains the GUI development files.
-
 %define x_configure \
 ./configure \\\
 	--host=%{_target_platform} \\\
@@ -88,7 +54,7 @@ This package contains the GUI development files.
 	--bindir=%{_bindir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
-	%{?_with_gpac:--enable-mp4-output} \\\
+	--enable-mp4-output \\\
 	%{?_with_visualize:--enable-visualize} \\\
 	--enable-pthread \\\
 	--enable-debug \\\
@@ -102,28 +68,37 @@ This package contains the GUI development files.
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
-convert gtk/x264.ico x264icon.png
+%ifarch %{ix86}
+mkdir sse2
+cp -a `ls -1|grep -v sse2` sse2/
+%endif
 
 %build
 %{x_configure}\
 	--libdir=%{_libdir} \
-	--enable-gtk \
+%ifarch %{ix86}
+	--disable-asm
+%endif
 
 %{__make} %{?_smp_mflags}
+%ifarch %{ix86}
+pushd sse2
+%{x_configure}\
+	--libdir=%{_libdir}/sse2 \
+
+%{__make} %{?_smp_mflags}
+popd
+%endif
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
-
-desktop-file-install --vendor livna			\
-	--dir $RPM_BUILD_ROOT%{_datadir}/applications	\
-	--mode 644					\
-	%{SOURCE2}
-
-%{__install} -Dpm 644 x264icon.png \
-	%{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-
-%find_lang %{name}_gtk
+%ifarch %{ix86}
+pushd sse2
+%{__make} DESTDIR=%{buildroot} install
+popd
+rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -131,20 +106,6 @@ desktop-file-install --vendor livna			\
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
-
-%post gui
-/sbin/ldconfig
-touch --no-create %{_datadir}/icons/hicolor || :
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-
-%postun gui
-/sbin/ldconfig
-touch --no-create %{_datadir}/icons/hicolor || :
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-   %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
 
 %files
 %defattr(644, root, root, 0755)
@@ -154,6 +115,9 @@ fi
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
+%ifarch %{ix86}
+%{_libdir}/sse2/libx264.so.*
+%endif
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -161,22 +125,18 @@ fi
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
-
-%files gui -f %{name}_gtk.lang
-%defattr(644, root, root, 0755)
-%attr(755,root,root) %{_bindir}/x264_gtk_encode
-%{_libdir}/libx264gtk.so.*
-%{_datadir}/x264/
-%{_datadir}/applications/*%{name}.desktop
-%{_datadir}/icons/hicolor/*/apps/x264.png
-
-%files gui-devel
-%defattr(644, root, root, 0755)
-%{_includedir}/x264_gtk*.h
-%{_libdir}/libx264gtk.so
-%{_libdir}/pkgconfig/%{name}gtk.pc
+%ifarch %{ix86}
+%{_libdir}/sse2/libx264.so
+%endif
 
 %changelog
+* Tue Dec 02 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.19.20081202git71d34b4
+- 20081202 snapshot
+- bring back asm optimized/unoptimized libs split
+- rebase and improve patch
+- GUI dropped upstream
+- dropped redundant BRs
+
 * Mon Nov 17 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.18.20080905
 - partially revert latest changes (the separate sse2 libs part) until selinux
   policy catches up
