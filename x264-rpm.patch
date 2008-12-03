@@ -1,6 +1,6 @@
 diff -up x264-20081202/configure.r x264-20081202/configure
 --- x264-20081202/configure.r	2008-12-02 23:26:25.000000000 +0100
-+++ x264-20081202/configure	2008-12-03 00:19:58.000000000 +0100
++++ x264-20081202/configure	2008-12-03 01:19:48.000000000 +0100
 @@ -41,7 +41,7 @@ as_check() {
      return $TMP
  }
@@ -41,8 +41,16 @@ diff -up x264-20081202/configure.r x264-20081202/configure
  cat > x264.pc << EOF
 diff -up x264-20081202/Makefile.r x264-20081202/Makefile
 --- x264-20081202/Makefile.r	2008-12-02 23:26:25.000000000 +0100
-+++ x264-20081202/Makefile	2008-12-03 00:21:09.000000000 +0100
-@@ -77,14 +77,25 @@ libx264.a: .depend $(OBJS) $(OBJASM)
++++ x264-20081202/Makefile	2008-12-03 01:21:24.000000000 +0100
+@@ -53,6 +53,7 @@ ALTIVECSRC += common/ppc/mc.c common/ppc
+               common/ppc/predict.c
+ SRCS += $(ALTIVECSRC)
+ $(ALTIVECSRC:%.c=%.o): CFLAGS += $(ALTIVECFLAGS)
++common/ppc/pixel.c:    CFLAGS += -flax-vector-conversions
+ endif
+ 
+ # VIS optims
+@@ -77,14 +78,25 @@ libx264.a: .depend $(OBJS) $(OBJASM)
  	ar rc libx264.a $(OBJS) $(OBJASM)
  	ranlib libx264.a
  
@@ -68,7 +76,7 @@ diff -up x264-20081202/Makefile.r x264-20081202/Makefile
  
  %.o: %.asm
  	$(AS) $(ASFLAGS) -o $@ $<
-@@ -148,10 +159,12 @@ install: x264$(EXE) $(SONAME)
+@@ -148,10 +160,12 @@ install: x264$(EXE) $(SONAME)
  	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(includedir)
  	install -d $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
  	install -m 644 x264.h $(DESTDIR)$(includedir)
