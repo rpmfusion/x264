@@ -4,13 +4,14 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.19.%{snapshot}git%{git}%{?dist}
+Release: 0.19.%{snapshot}git%{git}%{?dist}.1
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 Patch0: %{name}-rpm.patch
+Patch1: %{name}-vectors.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: gpac-devel
 %ifarch x86_64 %{ix86}
@@ -65,6 +66,7 @@ This package contains the development files.
 %prep
 %setup -q -n %{name}-%{snapshot}
 %patch0 -p1 -b .r
+%patch1 -p1 -b .v
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
@@ -130,6 +132,9 @@ rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
 %endif
 
 %changelog
+* Thu Dec 04 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.19.20081202git71d34b4.1
+- fix compilation on ppc
+
 * Tue Dec 02 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.19.20081202git71d34b4
 - 20081202 snapshot
 - bring back asm optimized/unoptimized libs split

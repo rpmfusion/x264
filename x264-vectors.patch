@@ -1,0 +1,12 @@
+diff -up x264-20081202/common/ppc/ppccommon.h.v x264-20081202/common/ppc/ppccommon.h
+--- x264-20081202/common/ppc/ppccommon.h.v	2008-12-02 23:26:25.000000000 +0100
++++ x264-20081202/common/ppc/ppccommon.h	2008-12-04 01:50:27.000000000 +0100
+@@ -251,7 +251,7 @@ typedef union {
+  * and i2
+  **********************************************************************/
+ #define VEC_DIFF_HL(p1,i1,p2,i2,dh,dl)       \
+-    pix1v = vec_ld(0, p1);                   \
++    pix1v = (vec_s16_t)vec_ld(0, p1);        \
+     temp0v = vec_u8_to_s16_h( pix1v );       \
+     temp1v = vec_u8_to_s16_l( pix1v );       \
+     VEC_LOAD( p2, pix2v, 16, vec_s16_t, p2); \
