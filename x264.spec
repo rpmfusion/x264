@@ -1,17 +1,16 @@
-%define snapshot 20081202
-%define git 71d34b4
+%define snapshot 20081213
+%define git 9089d21
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.19.%{snapshot}git%{git}%{?dist}.1
+Release: 0.20.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 Patch0: %{name}-rpm.patch
-Patch1: %{name}-vectors.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: gpac-devel
 %ifarch x86_64 %{ix86}
@@ -53,6 +52,7 @@ This package contains the development files.
 	--prefix=%{_prefix} \\\
 	--exec-prefix=%{_exec_prefix} \\\
 	--bindir=%{_bindir} \\\
+	--libdir=%{_libdir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
 	--enable-mp4-output \\\
@@ -66,41 +66,18 @@ This package contains the development files.
 %prep
 %setup -q -n %{name}-%{snapshot}
 %patch0 -p1 -b .r
-%patch1 -p1 -b .v
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
-%ifarch %{ix86}
-mkdir sse2
-cp -a `ls -1|grep -v sse2` sse2/
-%endif
 
 %build
-%{x_configure}\
-	--libdir=%{_libdir} \
-%ifarch %{ix86}
-	--disable-asm
-%endif
+%{x_configure}
 
 %{__make} %{?_smp_mflags}
-%ifarch %{ix86}
-pushd sse2
-%{x_configure}\
-	--libdir=%{_libdir}/sse2 \
-
-%{__make} %{?_smp_mflags}
-popd
-%endif
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
-%ifarch %{ix86}
-pushd sse2
-%{__make} DESTDIR=%{buildroot} install
-popd
-rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
-%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -117,9 +94,6 @@ rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
-%ifarch %{ix86}
-%{_libdir}/sse2/libx264.so.*
-%endif
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -127,11 +101,13 @@ rm %{buildroot}%{_libdir}/sse2/pkgconfig/x264.pc
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
-%ifarch %{ix86}
-%{_libdir}/sse2/libx264.so
-%endif
 
 %changelog
+* Sat Dec 13 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.20.20081213git9089d21
+- 20081213 snapshot
+- drop the libs split on x86, it doesn't work right for P3/AthlonXP
+- drop obsolete patch
+
 * Thu Dec 04 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.19.20081202git71d34b4.1
 - fix compilation on ppc
 
