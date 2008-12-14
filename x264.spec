@@ -4,7 +4,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.20.%{snapshot}git%{git}%{?dist}
+Release: 0.21.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -48,11 +48,9 @@ This package contains the development files.
 
 %define x_configure \
 ./configure \\\
-	--host=%{_target_platform} \\\
 	--prefix=%{_prefix} \\\
 	--exec-prefix=%{_exec_prefix} \\\
 	--bindir=%{_bindir} \\\
-	--libdir=%{_libdir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
 	--enable-mp4-output \\\
@@ -69,15 +67,39 @@ This package contains the development files.
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
+%ifarch %{ix86}
+mkdir simd
+cp -a `ls -1|grep -v simd` simd/
+%endif
 
 %build
-%{x_configure}
+%{x_configure}\
+	--host=%{_target_platform} \
+	--libdir=%{_libdir} \
+%ifarch %{ix86}
+	--disable-asm \
+%endif
 
 %{__make} %{?_smp_mflags}
+%ifarch %{ix86}
+pushd simd
+%{x_configure}\
+	--host=`echo %{_target_platform}|sed -e 's/i.86/i686/'` \
+	--libdir=%{_libdir}/i686 \
+
+%{__make} %{?_smp_mflags}
+popd
+%endif
 
 %install
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
+%ifarch %{ix86}
+pushd simd
+%{__make} DESTDIR=%{buildroot} install
+rm %{buildroot}%{_libdir}/i686/pkgconfig/x264.pc
+popd
+%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -94,6 +116,9 @@ mv -f AUTHORS.utf8 AUTHORS
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
+%ifarch %{ix86}
+%{_libdir}/i686/libx264.so.*
+%endif
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -101,8 +126,14 @@ mv -f AUTHORS.utf8 AUTHORS
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
+%ifarch %{ix86}
+%{_libdir}/i686/libx264.so
+%endif
 
 %changelog
+* Sat Dec 13 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.21.20081213git9089d21
+- fix the libs split on x86
+
 * Sat Dec 13 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.20.20081213git9089d21
 - 20081213 snapshot
 - drop the libs split on x86, it doesn't work right for P3/AthlonXP
