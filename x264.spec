@@ -4,7 +4,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.21.%{snapshot}git%{git}%{?dist}
+Release: 0.22.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -131,6 +131,9 @@ popd
 %endif
 
 %changelog
+* Sat Dec 20 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.22.20081213git9089d21
+- rebuild against new gpac
+
 * Sat Dec 13 2008 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.21.20081213git9089d21
 - fix the libs split on x86
 
