@@ -3,21 +3,23 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.15.%{snapshot}%{?dist}
+Release: 0.16.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 Source2: %{name}.desktop
+# converted from gtk/x264.ico and made background transparent
+Source3: %{name}icon.png
 Patch0: %{name}-rpm.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: desktop-file-utils
 # version.sh requires git
 BuildRequires: git-core
+%{?_with_gpac:BuildRequires: gpac-devel}
 BuildRequires: gtk2-devel
 BuildRequires: gettext
-BuildRequires: ImageMagick
 %ifarch %{ix86}
 BuildRequires: nasm
 %endif
@@ -60,27 +62,13 @@ Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Obsoletes: %{name}-gtk < %{version}-%{release}
 Provides: %{name}-gtk = %{version}-%{release}
+Obsoletes: %{name}-gui-devel < 0.0.0-0.16
 
 %description gui
 x264 is a free library for encoding H264/AVC video streams, written from
 scratch.
 
 This package contains the GTK GUI.
-
-%package gui-devel
-Summary: Development files for the x264 encoder GUI
-Group: Development/Libraries
-Requires: %{name}-devel = %{version}-%{release}
-Requires: %{name}-gui = %{version}-%{release}
-Requires: pkgconfig
-Obsoletes: %{name}-gtk-devel < %{version}-%{release}
-Provides: %{name}-gtk-devel = %{version}-%{release}
-
-%description gui-devel
-x264 is a free library for encoding H264/AVC video streams, written from
-scratch.
-
-This package contains the GUI development files.
 
 %prep
 %setup -q -n %{name}-%{snapshot}
@@ -91,7 +79,6 @@ mv -f AUTHORS.utf8 AUTHORS
 # configure hardcodes X11 lib path
 %{__perl} -pi -e 's|/usr/X11R6/lib |%{_libdir} |g' configure
 %{__perl} -pi -e 's|^MACHINE=.*|MACHINE=%{_build}|' configure
-convert gtk/x264.ico x264icon.png
 
 %build
 ./configure \
@@ -120,10 +107,11 @@ desktop-file-install --vendor livna			\
 	--mode 644					\
 	%{SOURCE2}
 
-%{__install} -Dpm 644 x264icon.png \
+%{__install} -Dpm 644 %{SOURCE3} \
 	%{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
 
 %find_lang %{name}_gtk
+rm %{buildroot}{%{_includedir}/x264_gtk*.h,%{_libdir}/{libx264gtk.so,pkgconfig/%{name}gtk.pc}}
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -170,13 +158,11 @@ fi
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/x264.png
 
-%files gui-devel
-%defattr(644, root, root, 0755)
-%{_includedir}/x264_gtk*.h
-%{_libdir}/libx264gtk.so
-%{_libdir}/pkgconfig/%{name}gtk.pc
-
 %changelog
+* Sun Feb 08 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.16.20080613
+- fix build with --with gpac
+- drop gui-devel subpackage
+
 * Sun Aug 03 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 0.0.0-0.15.20080613
 - rebuild
 
