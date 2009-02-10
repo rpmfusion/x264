@@ -1,6 +1,6 @@
-diff -up x264-20081202/configure.r x264-20081202/configure
---- x264-20081202/configure.r	2008-12-02 23:26:25.000000000 +0100
-+++ x264-20081202/configure	2008-12-03 01:19:48.000000000 +0100
+diff -up x264-20090119/configure.r x264-20090119/configure
+--- x264-20090119/configure.r	2009-02-10 20:05:17.000000000 +0100
++++ x264-20090119/configure	2009-02-10 20:06:33.000000000 +0100
 @@ -41,7 +41,7 @@ as_check() {
      return $TMP
  }
@@ -39,10 +39,10 @@ diff -up x264-20081202/configure.r x264-20081202/configure
  pclibs="-L$libdir -lx264 $libpthread"
  
  cat > x264.pc << EOF
-diff -up x264-20081202/Makefile.r x264-20081202/Makefile
---- x264-20081202/Makefile.r	2008-12-02 23:26:25.000000000 +0100
-+++ x264-20081202/Makefile	2008-12-03 01:21:24.000000000 +0100
-@@ -77,14 +78,25 @@ libx264.a: .depend $(OBJS) $(OBJASM)
+diff -up x264-20090119/Makefile.r x264-20090119/Makefile
+--- x264-20090119/Makefile.r	2009-02-10 20:05:17.000000000 +0100
++++ x264-20090119/Makefile	2009-02-10 20:06:02.000000000 +0100
+@@ -77,14 +77,25 @@ libx264.a: .depend $(OBJS) $(OBJASM)
  	ar rc libx264.a $(OBJS) $(OBJASM)
  	ranlib libx264.a
  
@@ -52,23 +52,23 @@ diff -up x264-20081202/Makefile.r x264-20081202/Makefile
  $(SONAME): .depend $(OBJS) $(OBJASM)
  	$(CC) -shared -o $@ $(OBJS) $(OBJASM) $(SOFLAGS) $(LDFLAGS)
  
-+ifneq ($(SONAME),)
-+x264$(EXE): $(OBJCLI) libx264.so
-+	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
-+
-+checkasm: tools/checkasm.o $(SONAME)
-+	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
-+else
++ifeq ($(SONAME),)
  x264$(EXE): $(OBJCLI) libx264.a 
  	$(CC) -o $@ $+ $(LDFLAGS)
  
  checkasm: tools/checkasm.o libx264.a
  	$(CC) -o $@ $+ $(LDFLAGS)
++else
++x264$(EXE): $(OBJCLI) libx264.so
++	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
++
++checkasm: tools/checkasm.o $(SONAME)
++	$(CC) -o $@ $+ $(LDFLAGS) -lx264 -L.
 +endif
  
  %.o: %.asm
  	$(AS) $(ASFLAGS) -o $@ $<
-@@ -148,10 +160,12 @@ install: x264$(EXE) $(SONAME)
+@@ -148,10 +159,12 @@ install: x264$(EXE) $(SONAME)
  	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(includedir)
  	install -d $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
  	install -m 644 x264.h $(DESTDIR)$(includedir)
