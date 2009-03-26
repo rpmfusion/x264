@@ -1,0 +1,12 @@
+diff -up x264-20090319/common/ppc/pixel.c.ppc x264-20090319/common/ppc/pixel.c
+--- x264-20090319/common/ppc/pixel.c.ppc	2009-03-26 21:12:11.000000000 +0100
++++ x264-20090319/common/ppc/pixel.c	2009-03-26 21:44:58.000000000 +0100
+@@ -1865,7 +1865,7 @@ static int pixel_sa8d_16x16_altivec( uin
+ 
+ #define VEC_LOAD_HIGH( p, num )                                    \
+     vec_u8_t pix8_##num = vec_ld( stride*num, p );                 \
+-    vec_s16_t pix16_s##num = vec_perm(pix8_##num, zero_u8v, perm); \
++    vec_s16_t pix16_s##num = (vec_s16_t)vec_perm(pix8_##num, zero_u8v, perm); \
+     vec_s16_t pix16_d##num;
+ 
+ static uint64_t pixel_hadamard_ac_altivec( uint8_t *pix, int stride, const vec_u8_t perm )
