@@ -3,7 +3,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.16.%{snapshot}%{?dist}
+Release: 0.17.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -17,7 +17,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: desktop-file-utils
 # version.sh requires git
 BuildRequires: git-core
-%{?_with_gpac:BuildRequires: gpac-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static}
 BuildRequires: gtk2-devel
 BuildRequires: gettext
 %ifarch %{ix86}
@@ -26,7 +26,6 @@ BuildRequires: nasm
 %ifarch x86_64
 BuildRequires: yasm
 %endif
-%{?_with_gpac:BuildRequires: gpac-devel}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -88,7 +87,7 @@ mv -f AUTHORS.utf8 AUTHORS
 	--includedir=%{_includedir} \
 	--libdir=%{_libdir} \
 	--extra-cflags="$RPM_OPT_FLAGS" \
-	%{?_with_gpac:--enable-mp4-output} \
+	%{!?_without_gpac:--enable-mp4-output} \
 	%{?_with_visualize:--enable-visualize} \
 	--enable-pthread \
 	--enable-debug \
@@ -159,6 +158,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/x264.png
 
 %changelog
+* Thu Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.17.20080613
+- build against gpac-devel-static by default,
+  x264 needs just a small part of gpac
+
 * Sun Feb 08 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.16.20080613
 - fix build with --with gpac
 - drop gui-devel subpackage
