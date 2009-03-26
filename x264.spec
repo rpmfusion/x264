@@ -3,7 +3,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.19.%{snapshot}%{?dist}
+Release: 0.20.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -19,7 +19,7 @@ BuildRequires: desktop-file-utils
 BuildRequires: git-core
 BuildRequires: gtk2-devel
 BuildRequires: gettext
-%{?_with_gpac:BuildRequires: gpac-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static}
 %ifarch x86_64 %{ix86}
 BuildRequires: yasm
 %endif
@@ -75,7 +75,7 @@ This package contains the GTK GUI.
 	--bindir=%{_bindir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
-	%{?_with_gpac:--enable-mp4-output} \\\
+	%{!?_without_gpac:--enable-mp4-output} \\\
 	%{?_with_visualize:--enable-visualize} \\\
 	--enable-pthread \\\
 	--enable-debug \\\
@@ -189,6 +189,10 @@ fi
 %{_datadir}/icons/hicolor/*/apps/x264.png
 
 %changelog
+* Thu Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.20.20080905
+- build against gpac-devel-static by default,
+  x264 needs just a small part of gpac
+
 * Sun Feb 08 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.19.20080905
 - don't require gpac-devel unconditionally
 - bring back x86 asm optimized libs split
