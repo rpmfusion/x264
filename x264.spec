@@ -1,10 +1,10 @@
-%define snapshot 20090119
-%define git 451ba8d
+%define snapshot 20090310
+%define git 5b65cc
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.23.%{snapshot}git%{git}%{?dist}
+Release: 0.24.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -12,7 +12,7 @@ Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 Patch0: %{name}-rpm.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
-%{?_with_gpac:BuildRequires: gpac-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static}
 %{?_with_visualize:BuildRequires: libX11-devel}
 %ifarch x86_64 %{ix86}
 BuildRequires: yasm
@@ -54,7 +54,7 @@ This package contains the development files.
 	--bindir=%{_bindir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
-	%{?_with_gpac:--enable-mp4-output} \\\
+	%{!?_without_gpac:--enable-mp4-output} \\\
 	%{?_with_visualize:--enable-visualize} \\\
 	--enable-pthread \\\
 	--enable-debug \\\
@@ -132,6 +132,10 @@ popd
 %endif
 
 %changelog
+* Tue Mar 10 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090310git5b65cc
+- 20090310 snapshot
+- build with static gpac
+
 * Tue Feb 10 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.23.20090119git451ba8d
 - 20090119 snapshot
 - fix BRs for build-time options

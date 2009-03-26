@@ -1,7 +1,7 @@
-diff -up x264-20090119/configure.r x264-20090119/configure
---- x264-20090119/configure.r	2009-02-10 20:05:17.000000000 +0100
-+++ x264-20090119/configure	2009-02-10 20:06:33.000000000 +0100
-@@ -41,7 +41,7 @@ as_check() {
+diff -up x264-20090310/configure.r x264-20090310/configure
+--- x264-20090310/configure.r	2009-03-10 23:48:14.000000000 +0100
++++ x264-20090310/configure	2009-03-11 01:40:31.000000000 +0100
+@@ -42,7 +42,7 @@ as_check() {
      return $TMP
  }
  
@@ -10,27 +10,15 @@ diff -up x264-20090119/configure.r x264-20090119/configure
  
  prefix='/usr/local'
  exec_prefix='${prefix}'
-@@ -239,6 +239,7 @@ case $host_cpu in
-   i*86)
+@@ -236,6 +236,7 @@ case $host_cpu in
      ARCH="X86"
-     ASFLAGS="-O2"
+     AS="yasm"
+     ASFLAGS="$ASFLAGS -O2"
 +    LDFLAGS="$LDFLAGS -m32"
      if [ "$SYS" = MACOSX ]; then
        ASFLAGS="$ASFLAGS -f macho -DPREFIX"
      elif [ "$SYS" = MINGW ]; then
-@@ -352,7 +353,11 @@ if test "$pthread" = "yes" ; then
-     LDFLAGS="$LDFLAGS $libpthread"
- fi
- 
-+if [ "$shared" = "yes" ]; then
-+MP4_LDFLAGS="-lgpac"
-+else
- MP4_LDFLAGS="-lgpac_static"
-+fi
- if [ $SYS = MINGW ]; then
-     MP4_LDFLAGS="$MP4_LDFLAGS -lwinmm"
- fi
-@@ -452,8 +457,6 @@ if [ "$shared" = "yes" ]; then
+@@ -466,8 +471,6 @@ if [ "$shared" = "yes" ]; then
      echo 'default: $(SONAME)' >> config.mak
  fi
  
@@ -39,12 +27,12 @@ diff -up x264-20090119/configure.r x264-20090119/configure
  pclibs="-L$libdir -lx264 $libpthread"
  
  cat > x264.pc << EOF
-diff -up x264-20090119/Makefile.r x264-20090119/Makefile
---- x264-20090119/Makefile.r	2009-02-10 20:05:17.000000000 +0100
-+++ x264-20090119/Makefile	2009-02-10 20:06:02.000000000 +0100
+diff -up x264-20090310/Makefile.r x264-20090310/Makefile
+--- x264-20090310/Makefile.r	2009-03-10 23:48:14.000000000 +0100
++++ x264-20090310/Makefile	2009-03-11 01:39:35.000000000 +0100
 @@ -77,14 +77,25 @@ libx264.a: .depend $(OBJS) $(OBJASM)
- 	ar rc libx264.a $(OBJS) $(OBJASM)
- 	ranlib libx264.a
+ 	$(AR) rc libx264.a $(OBJS) $(OBJASM)
+ 	$(RANLIB) libx264.a
  
 +libx264.so: $(SONAME)
 +	ln -sf $(SONAME) libx264.$(SOSUFFIX)
@@ -68,17 +56,17 @@ diff -up x264-20090119/Makefile.r x264-20090119/Makefile
  
  %.o: %.asm
  	$(AS) $(ASFLAGS) -o $@ $<
-@@ -148,10 +159,12 @@ install: x264$(EXE) $(SONAME)
+@@ -147,10 +158,12 @@ install: x264$(EXE) $(SONAME)
  	install -d $(DESTDIR)$(bindir) $(DESTDIR)$(includedir)
  	install -d $(DESTDIR)$(libdir) $(DESTDIR)$(libdir)/pkgconfig
  	install -m 644 x264.h $(DESTDIR)$(includedir)
 +ifeq ($(SONAME),)
  	install -m 644 libx264.a $(DESTDIR)$(libdir)
-+	ranlib $(DESTDIR)$(libdir)/libx264.a
++	$(RANLIB) $(DESTDIR)$(libdir)/libx264.a
 +endif
  	install -m 644 x264.pc $(DESTDIR)$(libdir)/pkgconfig
  	install x264$(EXE) $(DESTDIR)$(bindir)
--	ranlib $(DESTDIR)$(libdir)/libx264.a
+-	$(RANLIB) $(DESTDIR)$(libdir)/libx264.a
  ifeq ($(SYS),MINGW)
  	$(if $(SONAME), install -m 755 $(SONAME) $(DESTDIR)$(bindir))
  else
