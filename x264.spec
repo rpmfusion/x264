@@ -133,7 +133,6 @@ popd
 %changelog
 * Tue Mar 26 2009 kwizart <kwizart at gmail.com > -  0.0.0-0.25.20091007git496d79d
 - Update to 20091007git
-- enable asm on all x86 since default is already i686
 
 * Tue Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090319gitc109c8
 - 20090319 snapshot
