@@ -1,17 +1,15 @@
-%define snapshot 20090319
-%define git c109c8
+%global snapshot 20091007
+%global git 496d79d
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.24.%{snapshot}git%{git}%{?dist}
+Release: 0.25.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
-Patch0: %{name}-rpm.patch
-Patch1: %{name}-ppc.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 %{!?_without_gpac:BuildRequires: gpac-devel-static}
 %{?_with_visualize:BuildRequires: libX11-devel}
@@ -65,8 +63,6 @@ This package contains the development files.
 
 %prep
 %setup -q -n %{name}-%{snapshot}
-%patch0 -p1 -b .r
-%patch1 -p1 -b .ppc
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
@@ -122,6 +118,7 @@ popd
 %ifarch %{ix86}
 %{_libdir}/i686/libx264.so.*
 %endif
+%exclude %{_libdir}/libx264.a
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -134,6 +131,10 @@ popd
 %endif
 
 %changelog
+* Tue Mar 26 2009 kwizart <kwizart at gmail.com > -  0.0.0-0.25.20091007git496d79d
+- Update to 20091007git
+- enable asm on all x86 since default is already i686
+
 * Tue Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090319gitc109c8
 - 20090319 snapshot
 - build with static gpac
