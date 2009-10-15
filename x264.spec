@@ -80,11 +80,11 @@ cp -a `ls -1|grep -v simd` simd/
 %endif
 
 %{__make} %{?_smp_mflags}
-%ifarch %{ix86}
+%ifarch i686
 pushd simd
 %{x_configure}\
-	--host=`echo %{_target_platform}|sed -e 's/i.86/i686/'` \
-	--libdir=%{_libdir}/i686 \
+	--host=%{_target_platform} \
+	--libdir=%{_libdir}/sse2 \
 
 %{__make} %{?_smp_mflags}
 popd
@@ -96,7 +96,7 @@ popd
 %ifarch %{ix86}
 pushd simd
 %{__make} DESTDIR=%{buildroot} install
-rm %{buildroot}%{_libdir}/i686/pkgconfig/x264.pc
+rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
 popd
 %endif
 
@@ -115,8 +115,9 @@ popd
 %files libs
 %defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.*
-%ifarch %{ix86}
-%{_libdir}/i686/libx264.so.*
+%ifarch i686
+%{_libdir}/sse2/libx264.so.*
+%exclude %{_libdir}/sse2/libx264.a
 %endif
 %exclude %{_libdir}/libx264.a
 
@@ -127,12 +128,13 @@ popd
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
 %ifarch %{ix86}
-%{_libdir}/i686/libx264.so
+%{_libdir}/sse2/libx264.so
 %endif
 
 %changelog
-* Tue Mar 26 2009 kwizart <kwizart at gmail.com > -  0.0.0-0.25.20091007git496d79d
+* Thu Oct 15 2009 kwizart <kwizart at gmail.com > -  0.0.0-0.25.20091007git496d79d
 - Update to 20091007git
+- Move simd to %%{_libdir}/sse2
 
 * Tue Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090319gitc109c8
 - 20090319 snapshot
