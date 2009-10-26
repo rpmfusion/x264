@@ -1,10 +1,10 @@
-%global snapshot 20091007
-%global git 496d79d
+%global snapshot 20091026
+%global git ec46ace7
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.25.%{snapshot}git%{git}%{?dist}
+Release: 0.26.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -132,6 +132,9 @@ popd
 %endif
 
 %changelog
+* Mon Oct 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.26.20091026gitec46ace7
+- 20091026 snapshot
+
 * Thu Oct 15 2009 kwizart <kwizart at gmail.com > -  0.0.0-0.25.20091007git496d79d
 - Update to 20091007git
 - Move simd to %%{_libdir}/sse2
