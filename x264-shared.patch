@@ -1,0 +1,34 @@
+diff -up x264-20100116/configure.shared x264-20100116/configure
+--- x264-20100116/configure.shared	2010-01-16 13:48:11.000000000 +0100
++++ x264-20100116/configure	2010-01-16 13:53:15.000000000 +0100
+@@ -559,7 +559,7 @@ if [ "$shared" = "yes" ]; then
+         echo "SONAME=libx264.so.$API" >> config.mak
+         echo 'SOFLAGS=-Wl,-soname,$(SONAME)' >> config.mak
+     fi
+-    echo 'default: $(SONAME)' >> config.mak
++    echo 'default: libx264.a $(SONAME)' >> config.mak
+ fi
+ 
+ pclibs="-L$libdir -lx264 $libpthread"
+diff -up x264-20100116/Makefile.shared x264-20100116/Makefile
+--- x264-20100116/Makefile.shared	2010-01-16 13:45:48.000000000 +0100
++++ x264-20100116/Makefile	2010-01-16 13:52:55.000000000 +0100
+@@ -105,6 +105,9 @@ ifneq ($(SONAME),)
+ ifeq ($(SYS),MINGW)
+ SRCSO += x264dll.c
+ endif
++LIB=$(SONAME)
++else
++LIB=libx264.a
+ endif
+ 
+ OBJS = $(SRCS:%.c=%.o)
+@@ -123,7 +126,7 @@ libx264.a: .depend $(OBJS) $(OBJASM)
+ $(SONAME): .depend $(OBJS) $(OBJASM) $(OBJSO)
+ 	$(CC) -shared -o $@ $(OBJS) $(OBJASM) $(OBJSO) $(SOFLAGS) $(LDFLAGS)
+ 
+-x264$(EXE): $(OBJCLI) libx264.a
++x264$(EXE): $(OBJCLI) $(LIB)
+ 	$(CC) -o $@ $+ $(LDFLAGS) $(LDFLAGSCLI)
+ 
+ checkasm: tools/checkasm.o libx264.a
