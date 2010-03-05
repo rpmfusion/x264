@@ -1,15 +1,21 @@
-%global snapshot 20091026
-%global git ec46ace7
+%global snapshot 20091109
+%global git 3daa02e
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.26.%{snapshot}git%{git}%{?dist}
+Release: 0.27.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
-Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
+Source0: %{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
+# don't remove config.h and don't re-run version.sh
+Patch0: x264-nover.patch
+# link with shared libx264
+Patch1: x264-shared.patch
+# don't strip if configured with --enable-debug
+Patch2: x264-nostrip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 %{!?_without_gpac:BuildRequires: gpac-devel-static}
 %{?_with_visualize:BuildRequires: libX11-devel}
@@ -63,6 +69,9 @@ This package contains the development files.
 
 %prep
 %setup -q -n %{name}-%{snapshot}
+%patch0 -p1 -b .nover
+%patch1 -p1 -b .shared
+%patch2 -p1 -b .nostrip
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
@@ -132,6 +141,12 @@ popd
 %endif
 
 %changelog
+* Fri Mar 05 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.27.20091109git3daa02e
+- 20091109 snapshot (last before ABI change)
+- don't remove config.h and don't re-run version.sh
+- link x264 binary to the shared library
+- really don't strip if debug is enabled
+
 * Mon Oct 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.26.20091026gitec46ace7
 - 20091026 snapshot
 
