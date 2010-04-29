@@ -142,7 +142,7 @@ popd
 
 %changelog
 * Thu Apr 29 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.27.20100429gitd9db8b3
-- 20100209 snapshot
+- 20100429 snapshot
 - s/%%{ix86}/i686 (rfbz #1075)
 - ship more docs in -devel
 
