@@ -13,10 +13,12 @@ cleanup() {
 unset CDPATH
 pwd=$(pwd)
 git=$(date +%Y%m%d)
+git=20100130
 
 pushd "$tmp"
 git clone git://git.videolan.org/x264.git x264-$git
 pushd x264-$git
+git checkout 3659b8124a809c39d61a28bdf1b235e81c02b06d
 ./version.sh .
 find . -type d -name .git -print0 | xargs -0r rm -rf
 popd

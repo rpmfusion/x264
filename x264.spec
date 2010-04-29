@@ -1,5 +1,5 @@
-%global snapshot 20100116
-%global git 3d0f110
+%global snapshot 20100130
+%global git 3659b81
 
 Summary: H264/AVC video streams encoder
 Name: x264
@@ -19,7 +19,7 @@ Patch2: x264-nostrip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 %{!?_without_gpac:BuildRequires: gpac-devel-static}
 %{?_with_visualize:BuildRequires: libX11-devel}
-%ifarch x86_64 %{ix86}
+%ifarch x86_64 i686
 BuildRequires: yasm
 %endif
 Requires: %{name}-libs = %{version}-%{release}
@@ -75,7 +75,7 @@ This package contains the development files.
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
 mv -f AUTHORS.utf8 AUTHORS
-%ifarch %{ix86}
+%ifarch i686
 mkdir simd
 cp -a `ls -1|grep -v simd` simd/
 %endif
@@ -84,7 +84,7 @@ cp -a `ls -1|grep -v simd` simd/
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-%ifarch %{ix86}
+%ifarch i686
 	--disable-asm \
 %endif
 
@@ -102,7 +102,7 @@ popd
 %install
 %{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
-%ifarch %{ix86}
+%ifarch i686
 pushd simd
 %{__make} DESTDIR=%{buildroot} install
 rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
@@ -132,15 +132,20 @@ popd
 
 %files devel
 %defattr(644, root, root, 0755)
-%doc doc/ratecontrol.txt doc/vui.txt
+%doc doc/*
 %{_includedir}/x264.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
-%ifarch %{ix86}
+%ifarch i686
 %{_libdir}/sse2/libx264.so
 %endif
 
 %changelog
+* Thu Apr 29 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.27.20100130git3659b81
+- 20100130 snapshot (last before next major version bump)
+- s/%%{ix86}/i686 (rfbz #1075)
+- ship more docs in -devel
+
 * Sat Jan 16 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.26.20100116git3d0f110
 - 20100116 snapshot (SO version bump)
 - don't remove config.h and don't re-run version.sh
