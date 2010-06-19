@@ -1,21 +1,12 @@
-diff -up x264-20100209/configure.nover x264-20100209/configure
---- x264-20100209/configure.nover	2010-02-09 21:33:25.000000000 +0100
-+++ x264-20100209/configure	2010-02-09 22:20:35.000000000 +0100
-@@ -103,7 +103,7 @@ die() {
-     exit 1
- }
- 
--rm -f config.h config.mak config.log x264.pc conftest*
-+rm -f config.mak config.log x264.pc conftest*
- 
- prefix='/usr/local'
- exec_prefix='${prefix}'
-@@ -667,8 +667,6 @@ if [ "$shared" = "yes" ]; then
+diff -up x264-20100620/configure.nover x264-20100620/configure
+--- x264-20100620/configure.nover	2010-06-20 00:07:41.000000000 +0200
++++ x264-20100620/configure	2010-06-20 00:11:53.000000000 +0200
+@@ -689,7 +689,7 @@ if [ "$shared" = "yes" ]; then
      echo 'default: $(SONAME)' >> config.mak
  fi
  
--./version.sh
--
+-./version.sh >> config.h
++cat version.h >> config.h
+ 
  pclibs="-L$libdir -lx264 $libpthread"
  
- cat > x264.pc << EOF
