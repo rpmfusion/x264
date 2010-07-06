@@ -1,5 +1,5 @@
-%global snapshot 20100620
-%global git 20cbe10
+%global snapshot 20100706
+%global git d058f37
 
 Summary: H264/AVC video streams encoder
 Name: x264
@@ -8,7 +8,7 @@ Release: 0.28.%{snapshot}git%{git}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
-Source0: http://rpm.greysector.net/livna/%{name}-%{snapshot}.tar.bz2
+Source0: %{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
@@ -23,7 +23,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: yasm
 %endif
 Requires: %{name}-libs = %{version}-%{release}
-Obsoletes: %{name}-gui < 0.0.0-0.19
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -34,7 +33,6 @@ This package contains the frontend.
 %package libs
 Summary: Library for encoding H264/AVC video streams
 Group: Development/Libraries
-Obsoletes: x264 < 0.0.0-0.13.20080420
 
 %description libs
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -141,8 +139,9 @@ popd
 %endif
 
 %changelog
-* Sun Jun 20 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.28.20100620git20cbe10
-- 20100620 snapshot (ABI bump)
+* Tue Jul 06 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.28.20100706gitd058f37
+- 20100706 snapshot (ABI bump)
+- drop old Obsoletes:
 
 * Thu Apr 29 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.27.20100429gitd9db8b3
 - 20100429 snapshot
