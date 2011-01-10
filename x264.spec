@@ -1,10 +1,9 @@
-%global snapshot 20100706
-%global git d058f37
+%global snapshot 20110110
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.28.%{snapshot}git%{git}%{?dist}
+Release: 0.29.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -57,9 +56,7 @@ This package contains the development files.
 	--bindir=%{_bindir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
-	%{!?_without_gpac:--enable-mp4-output} \\\
 	%{?_with_visualize:--enable-visualize} \\\
-	--enable-pthread \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--enable-pic
@@ -132,6 +129,7 @@ popd
 %defattr(644, root, root, 0755)
 %doc doc/*
 %{_includedir}/x264.h
+%{_includedir}/x264_config.h
 %{_libdir}/libx264.so
 %{_libdir}/pkgconfig/%{name}.pc
 %ifarch i686
@@ -139,6 +137,9 @@ popd
 %endif
 
 %changelog
+* Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110110
+- 20110110 snapshot (ABI bump)
+
 * Tue Jul 06 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.28.20100706gitd058f37
 - 20100706 snapshot (ABI bump)
 - drop old Obsoletes:
