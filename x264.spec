@@ -1,4 +1,4 @@
-%global snapshot 20110110
+%global snapshot 20110227
 
 Summary: H264/AVC video streams encoder
 Name: x264
@@ -137,8 +137,8 @@ popd
 %endif
 
 %changelog
-* Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110110
-- 20110110 snapshot (ABI bump)
+* Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110227
+- 20110227 snapshot (ABI bump)
 
 * Tue Jul 06 2010 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.28.20100706gitd058f37
 - 20100706 snapshot (ABI bump)

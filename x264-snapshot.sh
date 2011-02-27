@@ -17,7 +17,7 @@ git=$(date +%Y%m%d)
 pushd "$tmp"
 git clone git://git.videolan.org/x264.git x264-$git
 pushd x264-$git
-./version.sh .
+./version.sh > version.h
 find . -type d -name .git -print0 | xargs -0r rm -rf
 popd
 tar jcf "$pwd"/x264-$git.tar.bz2 x264-$git
