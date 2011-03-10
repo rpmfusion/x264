@@ -3,7 +3,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.29.%{snapshot}%{?dist}
+Release: 0.30.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -11,8 +11,6 @@ Source0: %{name}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-# link with shared libx264
-Patch1: x264-shared.patch
 # don't strip if configured with --enable-debug
 Patch2: x264-nostrip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
@@ -65,7 +63,6 @@ This package contains the development files.
 %prep
 %setup -q -n %{name}-%{snapshot}
 %patch0 -p1 -b .nover
-%patch1 -p1 -b .shared
 %patch2 -p1 -b .nostrip
 # AUTHORS file is in iso-8859-1
 iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
@@ -137,6 +134,9 @@ popd
 %endif
 
 %changelog
+* Thu Mar 10 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110227
+- Remove merged x264-shared.patch
+
 * Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110227
 - 20110227 snapshot (ABI bump)
 
