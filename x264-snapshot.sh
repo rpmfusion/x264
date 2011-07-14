@@ -12,13 +12,15 @@ cleanup() {
 
 unset CDPATH
 pwd=$(pwd)
-git=$(date +%Y%m%d)
+date=$(date +%Y%m%d)
+package=x264
+branch=stable
 
 pushd "$tmp"
-git clone git://git.videolan.org/x264.git x264-$git
-pushd x264-$git
+git clone git://git.videolan.org/${package}.git -b ${branch}
+cd ${package}
 ./version.sh > version.h
-find . -type d -name .git -print0 | xargs -0r rm -rf
-popd
-tar jcf "$pwd"/x264-$git.tar.bz2 x264-$git
+git add version.h
+git commit version.h
+git archive --prefix="${package}-${branch}-${date}/" --format=tar ${branch} | bzip2 > "$pwd"/${package}-${branch}-${date}.tar.bz2
 popd >/dev/null
