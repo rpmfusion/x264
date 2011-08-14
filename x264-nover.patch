@@ -1,9 +1,9 @@
-diff -up x264-20100620/configure.nover x264-20100620/configure
---- x264-20100620/configure.nover	2010-06-20 00:07:41.000000000 +0200
-+++ x264-20100620/configure	2010-06-20 00:11:53.000000000 +0200
-@@ -689,7 +689,7 @@ if [ "$shared" = "yes" ]; then
-     echo 'default: $(SONAME)' >> config.mak
- fi
+diff -up x264-stable-20110620/configure.nover x264-stable-20110620/configure
+--- x264-stable-20110620/configure.nover	2011-08-12 02:04:14.000000000 +0200
++++ x264-stable-20110620/configure	2011-08-12 02:07:28.000000000 +0200
+@@ -1038,7 +1038,7 @@ fi
+ echo "LDFLAGSCLI = $LDFLAGSCLI" >> config.mak
+ echo "CLI_LIBX264 = $CLI_LIBX264" >> config.mak
  
 -./version.sh >> config.h
 +cat version.h >> config.h
