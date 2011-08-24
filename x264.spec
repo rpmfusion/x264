@@ -1,10 +1,10 @@
-%global snapshot 20110714
+%global snapshot 20110811
 %global branch   stable
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.30.%{snapshot}%{?dist}
+Release: 0.31.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -60,6 +60,7 @@ This package contains the development files.
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
 	--enable-debug \\\
 	--enable-shared \\\
+	--system-libx264 \\\
 	--enable-pic
 
 
@@ -135,6 +136,11 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Mon Aug 22 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.31.20110811
+- 20110811 snapshot (ABI 116)
+- fix snapshot script to include version.h properly
+- link x264 binary to the shared library
+
 * Thu Jul 14 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110714
 - Update to 20110714 stable branch (ABI 115)
 - Convert x264-snapshot to git (based on ffmpeg script).

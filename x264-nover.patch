@@ -1,12 +1,12 @@
-diff -up x264-stable-20110714/configure.nover x264-stable-20110714/configure
---- x264-stable-20110714/configure.nover	2011-07-14 19:40:29.000000000 +0200
-+++ x264-stable-20110714/configure	2011-07-14 19:42:02.213802421 +0200
-@@ -1038,7 +1038,7 @@ fi
+diff -up x264-stable-20110811/configure.nover x264-stable-20110811/configure
+--- x264-stable-20110811/configure.nover	2011-08-11 20:21:38.000000000 +0200
++++ x264-stable-20110811/configure	2011-08-11 20:27:39.000000000 +0200
+@@ -1057,7 +1057,7 @@ fi
  echo "LDFLAGSCLI = $LDFLAGSCLI" >> config.mak
  echo "CLI_LIBX264 = $CLI_LIBX264" >> config.mak
  
--./version.sh >> config.h
-+cat version.h >> config.h
+-./version.sh >> x264_config.h
++cat version.h >> x264_config.h
  
  pclibs="-L$libdir -lx264 $libpthread"
  
