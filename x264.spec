@@ -2,6 +2,7 @@
 %global branch   stable
 #Defined to bootstrap for EL-6
 %global _without_gpac  1
+%global _without_asm   1
 
 Summary: H264/AVC video streams encoder
 Name: x264
@@ -19,9 +20,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 %{?_with_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
+%{!?_without_asm:
 %ifarch x86_64 i686
 BuildRequires: yasm
 %endif
+}
 Requires: %{name}-libs = %{version}-%{release}
 
 %description
@@ -63,7 +66,8 @@ This package contains the development files.
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
-	--enable-pic
+	--enable-pic \\\
+	--disable-asm
 
 
 %prep
