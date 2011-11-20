@@ -12,13 +12,18 @@ cleanup() {
 
 unset CDPATH
 pwd=$(pwd)
-git=$(date +%Y%m%d)
+date=20110620
+package=x264
+branch=stable
+commit=2809cb6ce63817a58c5639642fe05bc50747e126
 
 pushd "$tmp"
-git clone git://git.videolan.org/x264.git x264-$git
-pushd x264-$git
+git clone git://git.videolan.org/${package}.git -b ${branch}
+cd ${package}
+git checkout ${commit}
+git checkout -b rpmfusion
 ./version.sh > version.h
-find . -type d -name .git -print0 | xargs -0r rm -rf
-popd
-tar jcf "$pwd"/x264-$git.tar.bz2 x264-$git
+git add version.h
+git commit -m "generated version.h" version.h
+git archive --prefix="${package}-${branch}-${date}/" --format=tar rpmfusion | bzip2 > "$pwd"/${package}-${branch}-${date}.tar.bz2
 popd >/dev/null

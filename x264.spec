@@ -1,22 +1,23 @@
-%global snapshot 20110227
+%global snapshot 20110620
+%global branch   stable
+#Defined to bootstrap for EL-6
+%global _without_gpac  1
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.29.%{snapshot}%{?dist}
+Release: 0.30.%{snapshot}%{?dist}.0
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
-Source0: %{name}-%{snapshot}.tar.bz2
+Source0: %{name}-%{branch}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-# link with shared libx264
-Patch1: x264-shared.patch
-# don't strip if configured with --enable-debug
-Patch2: x264-nostrip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 %{!?_without_gpac:BuildRequires: gpac-devel-static}
+%{?_with_libavformat:BuildRequires: ffmpeg-devel}
+%{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
 %ifarch x86_64 i686
 BuildRequires: yasm
@@ -57,19 +58,17 @@ This package contains the development files.
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
 	%{?_with_visualize:--enable-visualize} \\\
+	%{!?_with_libavformat:--disable-lavf} \\\
+	%{!?_with_ffmpegsource:--disable-ffms} \\\
 	--enable-debug \\\
 	--enable-shared \\\
+	--system-libx264 \\\
 	--enable-pic
 
 
 %prep
-%setup -q -n %{name}-%{snapshot}
+%setup -q -n %{name}-%{branch}-%{snapshot}
 %patch0 -p1 -b .nover
-%patch1 -p1 -b .shared
-%patch2 -p1 -b .nostrip
-# AUTHORS file is in iso-8859-1
-iconv -f iso-8859-1 -t utf-8 -o AUTHORS.utf8 AUTHORS
-mv -f AUTHORS.utf8 AUTHORS
 %ifarch i686
 mkdir simd
 cp -a `ls -1|grep -v simd` simd/
@@ -104,6 +103,10 @@ rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
 popd
 %endif
 
+#Fix timestamp on x264 generated headers
+touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
+
+
 %clean
 %{__rm} -rf %{buildroot}
 
@@ -121,9 +124,7 @@ popd
 %{_libdir}/libx264.so.*
 %ifarch i686
 %{_libdir}/sse2/libx264.so.*
-%exclude %{_libdir}/sse2/libx264.a
 %endif
-%exclude %{_libdir}/libx264.a
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -137,6 +138,14 @@ popd
 %endif
 
 %changelog
+* Fri Aug 12 2011 Dominik Mierzejewski <rpm@greysector.net> - 0.0.0-0.30.20110620
+- Update to 20110620 stable branch (ABI 115)
+- Convert x264-snapshot to git (based on ffmpeg script).
+- New Build Conditionals --with ffmpegsource libavformat
+- Remove shared and strip patches - undeeded anymore
+- Remove uneeded convertion of AUTHORS
+- fix snapshot script to include version.h properly
+
 * Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110227
 - 20110227 snapshot (ABI bump)
 
