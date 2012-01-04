@@ -7,7 +7,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.30.%{snapshot}%{?dist}.0
+Release: 0.30.%{snapshot}%{?dist}.1
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -142,6 +142,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110620.1
+- Rebuild for i686
+
 * Fri Aug 12 2011 Dominik Mierzejewski <rpm@greysector.net> - 0.0.0-0.30.20110620
 - Update to 20110620 stable branch (ABI 115)
 - Convert x264-snapshot to git (based on ffmpeg script).
