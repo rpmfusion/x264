@@ -1,13 +1,12 @@
 %global snapshot 20110620
 %global branch   stable
 #Defined to bootstrap for EL-6
-%global _without_gpac  1
 %global _without_asm   1
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.30.%{snapshot}%{?dist}.1
+Release: 0.30.%{snapshot}%{?dist}.2
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -142,8 +141,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
-* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110620.1
+* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110620.2
 - Rebuild for i686
+- Boostrap x264 for EL-6
 
 * Fri Aug 12 2011 Dominik Mierzejewski <rpm@greysector.net> - 0.0.0-0.30.20110620
 - Update to 20110620 stable branch (ABI 115)
