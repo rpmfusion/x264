@@ -1,10 +1,10 @@
-%global snapshot 20110811
+%global snapshot 20120125
 %global branch   stable
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.31.%{snapshot}%{?dist}
+Release: 0.32.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -136,6 +136,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Wed Jan 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.32.20120125
+- Update to 20120125
+
 * Mon Aug 22 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.31.20110811
 - 20110811 snapshot (ABI 116)
 - fix snapshot script to include version.h properly
