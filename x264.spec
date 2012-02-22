@@ -4,7 +4,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.33.%{snapshot}%{?dist}
+Release: 0.34.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -136,6 +136,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.34.20120125
+- Rebuilt for F-17 inter branch
+
 * Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.33.20120125
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
