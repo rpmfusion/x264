@@ -1,5 +1,6 @@
 %global snapshot 20120125
 %global branch   stable
+%global _without_gpac 1
 
 Summary: H264/AVC video streams encoder
 Name: x264
