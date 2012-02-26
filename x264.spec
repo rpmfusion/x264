@@ -5,7 +5,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.0.0
-Release: 0.33.%{snapshot}%{?dist}
+Release: 0.33.%{snapshot}%{?dist}.1
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
