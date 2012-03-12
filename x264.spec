@@ -1,11 +1,11 @@
-%global snapshot 20120125
+%global snapshot 20120303
 %global branch   stable
-%global _without_gpac 1
+#global _without_gpac 0
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.0.0
-Release: 0.34.%{snapshot}%{?dist}
+Version: 0.120
+Release: 1.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -13,8 +13,7 @@ Source0: %{name}-%{branch}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
-%{!?_without_gpac:BuildRequires: gpac-devel-static}
+%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel}
 %{?_with_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
@@ -106,9 +105,6 @@ popd
 touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
 
-%clean
-%{__rm} -rf %{buildroot}
-
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
@@ -137,6 +133,14 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Sat Mar 3 2012 Sérgio Basto <sergio@serjux.com> - 0.120-1.20120303
+- Change release number, upstream have release numbers at least on stable branch and as ffmpeg
+  reported.
+- Update to 20120303
+- Update x264-nover.patch, as suggest by Joseph D. Wagner <joe@josephdwagner.info> 
+- Dropped obsolete Buildroot and Clean.
+- add BuildRequires: zlib-devel to enable gpac.
+
 * Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.34.20120125
 - Rebuilt for F-17 inter branch
 
