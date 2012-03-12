@@ -5,8 +5,8 @@ diff -up x264-stable-20110811/configure.nover x264-stable-20110811/configure
  echo "LDFLAGSCLI = $LDFLAGSCLI" >> config.mak
  echo "CLI_LIBX264 = $CLI_LIBX264" >> config.mak
  
--./version.sh >> x264_config.h
-+cat version.h >> x264_config.h
+-${SRCPATH}/version.sh "${SRCPATH}" >> x264_config.h
++cat ${SRCPATH}/version.h >> ${SRCPATH}/x264_config.h
  
  pclibs="-L$libdir -lx264 $libpthread"
  
