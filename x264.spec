@@ -6,7 +6,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.120
-Release: 2.%{snapshot}%{?dist}
+Release: 3.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -77,7 +77,7 @@ cp -a `ls -1|grep -v simd` simd/
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-%ifarch i686
+%ifarch i686 armv5tel
 	--disable-asm \
 %endif
 
@@ -134,6 +134,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Sun Apr 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-3.20120303
+- Disable ASM on armv5tel
+
 * Tue Mar 6 2012 Sérgio Basto <sergio@serjux.com> - 0.120-2.20120303
 - Enable libavformat , after compile ffmeg with 0.120-1
 
