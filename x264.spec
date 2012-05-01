@@ -1,14 +1,22 @@
 %global snapshot 20120303
 %global branch   stable
-%{?_with_bootrap:
+%{?_with_bootstrap:
 %global _without_gpac 1
 %global _without_libavformat 1
 }
+#Whitelist of arches with dedicated ASM code
+%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc}
+%global _without_asm 1
+%endif
+
+%if 0%{?rhel}
+%global _without_asm 1
+%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.120
-Release: 4.%{snapshot}%{?dist}
+Release: 5.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -20,9 +28,7 @@ Patch0: x264-nover.patch
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
-%ifarch x86_64 i686
-BuildRequires: yasm
-%endif
+%{!?_without_asm:BuildRequires: yasm >= 1.0.0}
 Requires: %{name}-libs = %{version}-%{release}
 
 %description
@@ -42,7 +48,7 @@ scratch.
 %package devel
 Summary: Development files for the x264 library
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
@@ -61,6 +67,7 @@ This package contains the development files.
 	%{?_with_visualize:--enable-visualize} \\\
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
+	%{?_without_asm:--disable-asm} \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
@@ -136,9 +143,11 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
-* Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-4.20120303
+* Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-5.20120303
+- Forward rhel patch
 - Disable ASM on armv5tel armv6l
 - Add --with bootstrap conditional
+- Use %%{_isa} for devel requires
 
 * Tue Mar 6 2012 Sérgio Basto <sergio@serjux.com> - 0.120-2.20120303
 - Enable libavformat , after compile ffmeg with 0.120-1
