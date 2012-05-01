@@ -1,12 +1,23 @@
-%global snapshot 20110620
+%global snapshot 20120303
 %global branch   stable
-#Defined to bootstrap for EL-6
-%global _without_asm   1
+%global _with_bootstrap 1
+%{?_with_bootstrap:
+%global _without_gpac 1
+%global _without_libavformat 1
+}
+#Whitelist of arches with dedicated ASM code
+%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc}
+%global _without_asm 1
+%endif
+
+%if 0%{?rhel}
+%global _without_asm 1
+%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.0.0
-Release: 0.30.%{snapshot}%{?dist}.2
+Version: 0.120
+Release: 4.%{snapshot}%{?dist}_bootstrap
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -14,16 +25,11 @@ Source0: %{name}-%{branch}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
-%{!?_without_gpac:BuildRequires: gpac-devel-static}
-%{?_with_libavformat:BuildRequires: ffmpeg-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel}
+%{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
-%{!?_without_asm:
-%ifarch x86_64 i686
-BuildRequires: yasm
-%endif
-}
+%{!?_without_asm:BuildRequires: yasm >= 1.0.0}
 Requires: %{name}-libs = %{version}-%{release}
 
 %description
@@ -43,7 +49,7 @@ scratch.
 %package devel
 Summary: Development files for the x264 library
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
 %description devel
@@ -60,13 +66,13 @@ This package contains the development files.
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
 	%{?_with_visualize:--enable-visualize} \\\
-	%{!?_with_libavformat:--disable-lavf} \\\
+	%{?_without_libavformat:--disable-lavf} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
+	%{?_without_asm:--disable-asm} \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
-	--enable-pic \\\
-	--disable-asm
+	--enable-pic
 
 
 %prep
@@ -81,7 +87,7 @@ cp -a `ls -1|grep -v simd` simd/
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-%ifarch i686
+%ifarch i686 armv5tel armv6l
 	--disable-asm \
 %endif
 
@@ -109,9 +115,6 @@ popd
 #Fix timestamp on x264 generated headers
 touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
-
-%clean
-%{__rm} -rf %{buildroot}
 
 %post libs -p /sbin/ldconfig
 
@@ -141,17 +144,43 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
-* Wed Jan 04 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110620.2
-- Rebuild for i686
-- Boostrap x264 for EL-6
+* Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-5.20120303
+- Forward rhel patch
+- Disable ASM on armv5tel armv6l
+- Add --with bootstrap conditional
+- Use %%{_isa} for devel requires
 
-* Fri Aug 12 2011 Dominik Mierzejewski <rpm@greysector.net> - 0.0.0-0.30.20110620
-- Update to 20110620 stable branch (ABI 115)
+* Tue Mar 6 2012 Sérgio Basto <sergio@serjux.com> - 0.120-2.20120303
+- Enable libavformat , after compile ffmeg with 0.120-1
+
+* Sat Mar 3 2012 Sérgio Basto <sergio@serjux.com> - 0.120-1.20120303
+- Change release number, upstream have release numbers at least on stable branch and as ffmpeg
+  reported.
+- Update to 20120303
+- Update x264-nover.patch, as suggest by Joseph D. Wagner <joe@josephdwagner.info> 
+- Dropped obsolete Buildroot and Clean.
+- add BuildRequires: zlib-devel to enable gpac.
+
+* Wed Feb 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.34.20120125
+- Rebuilt for F-17 inter branch
+
+* Wed Feb 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.33.20120125
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Jan 25 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.32.20120125
+- Update to 20120125
+
+* Mon Aug 22 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.31.20110811
+- 20110811 snapshot (ABI 116)
+- fix snapshot script to include version.h properly
+- link x264 binary to the shared library
+
+* Thu Jul 14 2011 Nicolas Chauvet <kwizart@gmail.com> - 0.0.0-0.30.20110714
+- Update to 20110714 stable branch (ABI 115)
 - Convert x264-snapshot to git (based on ffmpeg script).
 - New Build Conditionals --with ffmpegsource libavformat
 - Remove shared and strip patches - undeeded anymore
 - Remove uneeded convertion of AUTHORS
-- fix snapshot script to include version.h properly
 
 * Mon Jan 10 2011 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.29.20110227
 - 20110227 snapshot (ABI bump)

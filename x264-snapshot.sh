@@ -12,10 +12,10 @@ cleanup() {
 
 unset CDPATH
 pwd=$(pwd)
-date=20110620
+date=$(date +%Y%m%d)
 package=x264
 branch=stable
-commit=2809cb6ce63817a58c5639642fe05bc50747e126
+commit=HEAD
 
 pushd "$tmp"
 git clone git://git.videolan.org/${package}.git -b ${branch}
