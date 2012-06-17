@@ -19,7 +19,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.124
-Release: 1.%{snapshot}%{?dist}
+Release: 2.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -126,8 +126,8 @@ popd
 %endif
 cd ../%{name}-%{branch}-%{snapshot}10b
 #{__make} DESTDIR=%{buildroot} install
-ln -f -s libx264.so.124 %{buildroot}/usr/lib/libx26410b.so
-install -m 755 libx264.so.124 %{buildroot}/usr/lib/libx26410b.so.124
+ln -f -s libx264.so.124 %{buildroot}%{_libdir}/libx26410b.so
+install -m 755 libx264.so.124 %{buildroot}%{_libdir}/libx26410b.so.124
 
 #Fix timestamp on x264 generated headers
 touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
@@ -163,6 +163,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sun Jun 17 2012 Sérgio Basto <sergio@serjux.com> - 0.124-2.20120616
+- use _libdir to fix build on x86_64.
+
 * Sun Jun 17 2012 Sérgio Basto <sergio@serjux.com> - 0.124-1.20120616
 - Update to 20120616
 - Add one build with --bit-depth=10
