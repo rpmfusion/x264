@@ -1,5 +1,8 @@
-%global snapshot 20120303
+%global snapshot 20120616
 %global branch   stable
+
+%global _with_bootstrap 1
+
 %{?_with_bootstrap:
 %global _without_gpac 1
 %global _without_libavformat 1
@@ -15,8 +18,8 @@
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.120
-Release: 5.%{snapshot}%{?dist}
+Version: 0.124
+Release: 1.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -81,6 +84,8 @@ This package contains the development files.
 mkdir simd
 cp -a `ls -1|grep -v simd` simd/
 %endif
+cd ..
+cp -a %{name}-%{branch}-%{snapshot} %{name}-%{branch}-%{snapshot}10b
 
 %build
 %{x_configure}\
@@ -100,9 +105,18 @@ pushd simd
 %{__make} %{?_smp_mflags}
 popd
 %endif
+cd ../%{name}-%{branch}-%{snapshot}10b
+%{x_configure}\
+	--host=%{_target_platform} \
+	--libdir=%{_libdir} \
+    --bit-depth=10 \
+%ifarch i686 armv5tel armv6l
+	--disable-asm \
+%endif
+
+%{__make} %{?_smp_mflags}
 
 %install
-%{__rm} -rf %{buildroot}
 %{__make} DESTDIR=%{buildroot} install
 %ifarch i686
 pushd simd
@@ -110,6 +124,10 @@ pushd simd
 rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
 popd
 %endif
+cd ../%{name}-%{branch}-%{snapshot}10b
+#{__make} DESTDIR=%{buildroot} install
+ln -f -s libx264.so.124 %{buildroot}/usr/lib/libx26410b.so
+install -m 755 libx264.so.124 %{buildroot}/usr/lib/libx26410b.so.124
 
 #Fix timestamp on x264 generated headers
 touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
@@ -130,6 +148,7 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %ifarch i686
 %{_libdir}/sse2/libx264.so.*
 %endif
+%{_libdir}/libx26410b.so.*
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -141,8 +160,14 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %ifarch i686
 %{_libdir}/sse2/libx264.so
 %endif
+%{_libdir}/libx26410b.so
 
 %changelog
+* Sun Jun 17 2012 Sérgio Basto <sergio@serjux.com> - 0.124-1.20120616
+- Update to 20120616
+- Add one build with --bit-depth=10
+- Enabled bootstrap, after rebuild ffmpeg, we rebuild x264 without bootstrap.
+
 * Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-5.20120303
 - Forward rhel patch
 - Disable ASM on armv5tel armv6l
