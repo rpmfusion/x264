@@ -1,6 +1,5 @@
 %global snapshot 20120303
 %global branch   stable
-%global _with_bootstrap 1
 %{?_with_bootstrap:
 %global _without_gpac 1
 %global _without_libavformat 1
@@ -17,7 +16,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.120
-Release: 4.%{snapshot}%{?dist}_bootstrap
+Release: 5.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -144,6 +143,9 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %endif
 
 %changelog
+* Tue Jun 19 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-5.20120303
+- Un-boostrap
+
 * Tue May 01 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.120-5.20120303
 - Forward rhel patch
 - Disable ASM on armv5tel armv6l
