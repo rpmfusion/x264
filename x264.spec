@@ -6,6 +6,7 @@
 %{?_with_bootstrap:
 %global _without_gpac 1
 %global _without_libavformat 1
+%global _without_libswscale  1
 }
 #Whitelist of arches with dedicated ASM code
 %ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc}
@@ -19,7 +20,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.124
-Release: 2.%{snapshot}%{?dist}
+Release: 3.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -69,6 +70,7 @@ This package contains the development files.
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
 	%{?_with_visualize:--enable-visualize} \\\
 	%{?_without_libavformat:--disable-lavf} \\\
+	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
 	%{?_without_asm:--disable-asm} \\\
 	--enable-debug \\\
@@ -78,16 +80,22 @@ This package contains the development files.
 
 
 %prep
-%setup -q -n %{name}-%{branch}-%{snapshot}
+%setup -q -c -n %{name}-%{branch}-%{snapshot}
+pushd %{name}-%{branch}-%{snapshot}
 %patch0 -p1 -b .nover
+popd
+variants="generic generic10"
 %ifarch i686
-mkdir simd
-cp -a `ls -1|grep -v simd` simd/
+variants="$variants simd"
 %endif
-cd ..
-cp -a %{name}-%{branch}-%{snapshot} %{name}-%{branch}-%{snapshot}10b
+for variant in $variants ; do
+  rm -rf ${variant}
+  cp -pr %{name}-%{branch}-%{snapshot} ${variant}
+done
+
 
 %build
+pushd generic
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
@@ -96,6 +104,8 @@ cp -a %{name}-%{branch}-%{snapshot} %{name}-%{branch}-%{snapshot}10b
 %endif
 
 %{__make} %{?_smp_mflags}
+popd
+
 %ifarch i686
 pushd simd
 %{x_configure}\
@@ -105,32 +115,39 @@ pushd simd
 %{__make} %{?_smp_mflags}
 popd
 %endif
-cd ../%{name}-%{branch}-%{snapshot}10b
+
+pushd generic10
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-    --bit-depth=10 \
+	--bit-depth=10
 %ifarch i686 armv5tel armv6l
 	--disable-asm \
 %endif
+sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
 
 %{__make} %{?_smp_mflags}
+popd
 
 %install
+pushd generic
 %{__make} DESTDIR=%{buildroot} install
+popd
 %ifarch i686
 pushd simd
 %{__make} DESTDIR=%{buildroot} install
 rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
 popd
 %endif
-cd ../%{name}-%{branch}-%{snapshot}10b
-#{__make} DESTDIR=%{buildroot} install
-ln -f -s libx264.so.124 %{buildroot}%{_libdir}/libx26410b.so
-install -m 755 libx264.so.124 %{buildroot}%{_libdir}/libx26410b.so.124
+pushd generic10
+SONAME=`grep "^SONAME=" config.mak`
+export $SONAME
+install -m 755 ${SONAME} %{buildroot}%{_libdir}
+ln -fs ${SONAME} %{buildroot}%{_libdir}/libx26410b.so
+popd
 
 #Fix timestamp on x264 generated headers
-touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
+touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
 
 %post libs -p /sbin/ldconfig
@@ -139,7 +156,7 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 
 %files
 %defattr(644, root, root, 0755)
-%doc AUTHORS COPYING
+%doc generic/AUTHORS generic/COPYING
 %attr(755,root,root) %{_bindir}/x264
 
 %files libs
@@ -152,7 +169,7 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 
 %files devel
 %defattr(644, root, root, 0755)
-%doc doc/*
+%doc generic/doc/*
 %{_includedir}/x264.h
 %{_includedir}/x264_config.h
 %{_libdir}/libx264.so
@@ -163,6 +180,10 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sat Jun 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.124-3.20120616
+- Rework alternatives build
+- Fix SONAME for x26410b
+
 * Sun Jun 17 2012 Sérgio Basto <sergio@serjux.com> - 0.124-2.20120616
 - use _libdir to fix build on x86_64.
 
