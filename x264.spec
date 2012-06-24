@@ -120,10 +120,11 @@ pushd generic10
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-	--bit-depth=10
 %ifarch i686 armv5tel armv6l
 	--disable-asm \
 %endif
+	--bit-depth=10
+
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
 
 %{__make} %{?_smp_mflags}
