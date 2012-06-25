@@ -1,0 +1,11 @@
+--- x264-stable-20120616/configure.orig	2012-06-25 21:18:18.324187703 +0100
++++ x264-stable-20120616/configure	2012-06-25 21:19:19.312886154 +0100
+@@ -904,7 +904,7 @@ if [ "$gpac" = "auto" ] ; then
+ fi
+ if [ "$gpac" = "yes" ] ; then
+     define HAVE_GPAC
+-    if cc_check gpac/isomedia.h "-Werror $GPAC_LIBS" "gf_malloc(1); gf_free(NULL);" ; then
++    if cc_check gpac/isomedia.h "-Werror $GPAC_LIBS" "void *p; p = gf_malloc(1); gf_free(p);" ; then
+         define HAVE_GF_MALLOC
+     fi
+     LDFLAGSCLI="$GPAC_LIBS $LDFLAGSCLI"

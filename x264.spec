@@ -18,14 +18,18 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.124
-Release: 4.%{snapshot}%{?dist}
+Release: 5.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-%{branch}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
+
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
+#upstreamable patches
+Patch100: x264-gf_malloc.patch
+
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
@@ -81,6 +85,7 @@ This package contains the development files.
 %setup -q -c -n %{name}-%{branch}-%{snapshot}
 pushd %{name}-%{branch}-%{snapshot}
 %patch0 -p1 -b .nover
+%patch100 -p1 -b .gf_malloc
 popd
 variants="generic generic10"
 %ifarch i686
@@ -179,6 +184,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Jun 25 2012 Sérgio Basto <sergio@serjux.com> - 0.124-5.20120616
+- Fixed detection of gf_malloc and gf_free
+
 * Sun Jun 24 2012 Sérgio Basto <sergio@serjux.com> - 0.124-4.20120616
 - unbootstrap.
 
