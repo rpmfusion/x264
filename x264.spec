@@ -1,7 +1,7 @@
 %global snapshot 20120904
 %global branch   stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -186,6 +186,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Thu Sep 06 2012 Sérgio Basto <sergio@serjux.com> - 0.125-2.20120904
+- unbootstrap
+
 * Tue Sep 04 2012 Sérgio Basto <sergio@serjux.com> - 0.125-1.20120904
 - Pulled latest stable patches, which bump version to 0.125.
 
