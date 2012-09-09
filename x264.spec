@@ -1,7 +1,7 @@
 %global snapshot 20120909
 %global branch   stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -20,7 +20,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.125
-Release: 3.%{snapshot}%{?dist}
+Release: 4.%{snapshot}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -186,6 +186,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sun Sep 09 2012 Sérgio Basto <sergio@serjux.com> - 0.125-4.20120909
+- unbootstrap on F18.
+
 * Sun Sep 09 2012 Sérgio Basto <sergio@serjux.com> - 0.125-3.20120909
 - update x264-0.125 from r2201 to r2209.
 
