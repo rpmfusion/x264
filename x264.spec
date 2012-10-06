@@ -1,5 +1,8 @@
-%global snapshot 20120909
-%global branch   stable
+%global gitdate 20121006
+%global gitversion 68dfb7b
+%global snapshot %{gitdate}-%{gitversion}
+%global gver .%{gitdate}git%{gitversion}
+%global branch stable
 
 #global _with_bootstrap 1
 
@@ -20,7 +23,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.125
-Release: 4.%{snapshot}%{?dist}
+Release: 5%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -65,7 +68,7 @@ scratch.
 
 This package contains the development files.
 
-%define x_configure \
+%global x_configure \
 ./configure \\\
 	--prefix=%{_prefix} \\\
 	--exec-prefix=%{_exec_prefix} \\\
@@ -186,6 +189,12 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sat Oct 06 2012 Sérgio Basto <sergio@serjux.com> - 0.125-4.20121006git68dfb7b
+- Note: no source update.
+- Just add git tag to package name, for faster check upstream.
+- Add git tag in x264-snapshot.sh .
+- Convert all defines in global. 
+
 * Sun Sep 09 2012 Sérgio Basto <sergio@serjux.com> - 0.125-4.20120909
 - unbootstrap on F18.
 
