@@ -1,5 +1,5 @@
-%global gitdate 20121006
-%global gitversion 68dfb7b
+%global gitdate 20121118
+%global gitversion f6a8615
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -22,8 +22,8 @@
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.125
-Release: 5%{?gver}%{?dist}
+Version: 0.128
+Release: 1%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -189,6 +189,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Nov 19 2012 Sérgio Basto <sergio@serjux.com> - 0.128-1.20121118gitf6a8615
+- Update to f6a8615ab0c922ac2cb5c82c9824f6f4742b1725.
+
 * Sat Oct 06 2012 Sérgio Basto <sergio@serjux.com> - 0.125-4.20121006git68dfb7b
 - Note: no source update.
 - Just add git tag to package name, for faster check upstream.
