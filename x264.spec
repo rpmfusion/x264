@@ -23,7 +23,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.128
-Release: 1%{?gver}%{?dist}
+Release: 2%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -189,6 +189,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Fri Nov 23 2012 Sérgio Basto <sergio@serjux.com> - 0.128-2.20121118gitf6a8615
+- unbootstrap on F18.
+
 * Mon Nov 19 2012 Sérgio Basto <sergio@serjux.com> - 0.128-1.20121118gitf6a8615
 - Update to f6a8615ab0c922ac2cb5c82c9824f6f4742b1725.
 
