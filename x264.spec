@@ -1,5 +1,6 @@
-%global gitdate 20121118
-%global gitversion f6a8615
+%global api 129
+%global gitdate 20130119
+%global gitversion 9c4ba4b
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -22,18 +23,16 @@
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.128
-Release: 2%{?gver}%{?dist}
+Version: 0.%{api}
+Release: 1%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
-Source0: %{name}-%{branch}-%{snapshot}.tar.bz2
+Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-#upstreamable patches
-Patch100: x264-gf_malloc.patch
 
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
@@ -87,18 +86,18 @@ This package contains the development files.
 
 
 %prep
-%setup -q -c -n %{name}-%{branch}-%{snapshot}
-pushd %{name}-%{branch}-%{snapshot}
+%setup -q -c -n %{name}-0.%{api}-%{snapshot}
+pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
-%patch100 -p1 -b .gf_malloc
 popd
+
 variants="generic generic10"
 %ifarch i686
 variants="$variants simd"
 %endif
 for variant in $variants ; do
   rm -rf ${variant}
-  cp -pr %{name}-%{branch}-%{snapshot} ${variant}
+  cp -pr %{name}-0.%{api}-%{snapshot} ${variant}
 done
 
 
@@ -170,11 +169,11 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 
 %files libs
 %defattr(644, root, root, 0755)
-%{_libdir}/libx264.so.*
+%{_libdir}/libx264.so.%{api}
 %ifarch i686
-%{_libdir}/sse2/libx264.so.*
+%{_libdir}/sse2/libx264.so.%{api}
 %endif
-%{_libdir}/libx26410b.so.*
+%{_libdir}/libx26410b.so.%{api}
 
 %files devel
 %defattr(644, root, root, 0755)
@@ -189,6 +188,11 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sat Jan 19 2013 Sérgio Basto <sergio@serjux.com> - 0.129-1.20130119git9c4ba4b
+- Update to 9c4ba4bde8965571159eae2d79f85cabbb47416c, soname bump.
+- Changed branch name by api number, is more readable.
+- Drop upstreamed patch.
+
 * Fri Nov 23 2012 Sérgio Basto <sergio@serjux.com> - 0.128-2.20121118gitf6a8615
 - unbootstrap on F18.
 
