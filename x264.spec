@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?dist}
+Release: 2%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -188,6 +188,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sun Jan 20 2013 Sérgio Basto <sergio@serjux.com> - 0.129-2.20130119git9c4ba4b
+- Rebuild for ffmpeg-1.1.1 .
+
 * Sat Jan 19 2013 Sérgio Basto <sergio@serjux.com> - 0.129-1.20130119git9c4ba4b
 - Update to 9c4ba4bde8965571159eae2d79f85cabbb47416c, soname bump.
 - Changed branch name by api number, is more readable.
