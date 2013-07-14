@@ -30,6 +30,7 @@ Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
+BuildRequires: perl-Digest-MD5
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
