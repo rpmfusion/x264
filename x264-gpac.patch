@@ -1,0 +1,11 @@
+--- generic10/configure	2013-09-30 01:59:40.537691428 +0100
++++ generic/configure	2013-09-30 02:24:21.637654522 +0100
+@@ -917,7 +917,7 @@ fi
+ 
+ if [ "$gpac" = "auto" ] ; then
+     gpac="no"
+-    cc_check "" -lz && GPAC_LIBS="-lgpac_static -lz" || GPAC_LIBS="-lgpac_static"
++    cc_check "" -lz && GPAC_LIBS="-lgpac_static -lz -lssl -lcrypto -lpng -ljpeg" || GPAC_LIBS="-lgpac_static"
+     if [ "$SYS" = "WINDOWS" ] ; then
+         GPAC_LIBS="$GPAC_LIBS -lwinmm"
+     fi

@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?dist}
+Release: 3%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -34,8 +34,9 @@ BuildRequires: perl-Digest-MD5
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
+Patch10: x264-gpac.patch
 
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{?_with_visualize:BuildRequires: libX11-devel}
@@ -90,6 +91,7 @@ This package contains the development files.
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
 pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
+%patch10 -p1 -b .gpac
 popd
 
 variants="generic generic10"
@@ -189,6 +191,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Sep 30 2013 Sérgio Basto <sergio@serjux.com> - 0.133-3.20130709git585324f
+- Fix gpac detection.
+
 * Thu Aug 15 2013 Nicolas Chauvet <kwizart@gmail.com> - 0.133-2.20130709git585324f
 - Rebuilt for FFmpeg 2.0.x
 
