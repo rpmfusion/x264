@@ -1,6 +1,6 @@
-%global api 133
-%global gitdate 20130709
-%global gitversion 585324f
+%global api 136
+%global gitdate 20131005
+%global gitversion 3361d59
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?dist}
+Release: 1%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -191,6 +191,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Fri Oct 18 2013 Sérgio Basto <sergio@serjux.com> - 0.136-1.20131005git3361d59
+- Update to 0.136 git 3361d59 (stable branch).
+
 * Mon Sep 30 2013 Sérgio Basto <sergio@serjux.com> - 0.133-3.20130709git585324f
 - Fix gpac detection.
 
@@ -325,7 +328,7 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 - Update to 20091007git
 - Move simd to %%{_libdir}/sse2
 
-* Tue Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090319gitc109c8
+* Thu Mar 26 2009 Dominik Mierzejewski <rpm@greysector.net> 0.0.0-0.24.20090319gitc109c8
 - 20090319 snapshot
 - build with static gpac
 - fix build on ppc
