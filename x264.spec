@@ -1,11 +1,11 @@
-%global api 136
-%global gitdate 20131005
-%global gitversion 3361d59
+%global api 138
+%global gitdate 20131030
+%global gitversion c628e3b
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-#global _with_bootstrap 1
+%global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -191,6 +191,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sat Nov 02 2013 Sérgio Basto <sergio@serjux.com> - 0.138-20131030-c628e3b
+- Update to 0.138 git c628e3b (stable branch) and bootstrap for new ffmpeg.
+
 * Fri Oct 18 2013 Sérgio Basto <sergio@serjux.com> - 0.136-1.20131005git3361d59
 - Update to 0.136 git 3361d59 (stable branch).
 
