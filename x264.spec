@@ -5,7 +5,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?dist}
+Release: 2%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -191,7 +191,10 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
-* Sat Nov 02 2013 Sérgio Basto <sergio@serjux.com> - 0.138-20131030-c628e3b
+* Tue Nov 05 2013 Sérgio Basto <sergio@serjux.com> - 0.138-2.20131030-c628e3b
+- Unbootstrap.
+
+* Sat Nov 02 2013 Sérgio Basto <sergio@serjux.com> - 0.138-1.20131030-c628e3b
 - Update to 0.138 git c628e3b (stable branch) and bootstrap for new ffmpeg.
 
 * Fri Oct 18 2013 Sérgio Basto <sergio@serjux.com> - 0.136-1.20131005git3361d59
