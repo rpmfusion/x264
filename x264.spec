@@ -1,6 +1,6 @@
-%global api 138
-%global gitdate 20131030
-%global gitversion c628e3b
+%global api 140
+%global gitdate 20140122
+%global gitversion de0bc36
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?dist}
+Release: 1%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -39,7 +39,6 @@ Patch10: x264-gpac.patch
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
-%{?_with_visualize:BuildRequires: libX11-devel}
 %{!?_without_asm:BuildRequires: yasm >= 1.0.0}
 Requires: %{name}-libs = %{version}-%{release}
 
@@ -76,7 +75,6 @@ This package contains the development files.
 	--bindir=%{_bindir} \\\
 	--includedir=%{_includedir} \\\
 	--extra-cflags="$RPM_OPT_FLAGS" \\\
-	%{?_with_visualize:--enable-visualize} \\\
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
@@ -191,6 +189,11 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Wed Jan 22 2014 Sérgio Basto <sergio@serjux.com> - 0.140-1.20140122gitde0bc36
+- Update to 0.140 git de0bc36 (stable branch)
+- drop visualize options, ./configure doesn't have --enable-visualize or --disable-visualize, 
+anymore
+
 * Tue Nov 05 2013 Sérgio Basto <sergio@serjux.com> - 0.138-2.20131030-c628e3b
 - Unbootstrap.
 

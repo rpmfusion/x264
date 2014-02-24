@@ -1,11 +1,13 @@
---- generic10/configure	2013-09-30 01:59:40.537691428 +0100
-+++ generic/configure	2013-09-30 02:24:21.637654522 +0100
-@@ -917,7 +917,7 @@ fi
- 
- if [ "$gpac" = "auto" ] ; then
+--- x264-0.140-20140122-de0bc36/configure.orig	2014-01-22 23:26:55.922650888 +0000
++++ x264-0.140-20140122-de0bc36/configure	2014-02-24 02:35:19.263127505 +0000
+@@ -941,7 +941,9 @@
+ if [ "$gpac" = "auto" -a "$lsmash" != "yes" ] ; then
      gpac="no"
--    cc_check "" -lz && GPAC_LIBS="-lgpac_static -lz" || GPAC_LIBS="-lgpac_static"
-+    cc_check "" -lz && GPAC_LIBS="-lgpac_static -lz -lssl -lcrypto -lpng -ljpeg" || GPAC_LIBS="-lgpac_static"
+     GPAC_LIBS="-lgpac_static"
+-    cc_check "" -lz && GPAC_LIBS="$GPAC_LIBS -lz"
++    for lib in -lz -lssl -lcrypto -lpng -ljpeg; do
++        cc_check "" $lib && GPAC_LIBS="$GPAC_LIBS $lib"
++    done
      if [ "$SYS" = "WINDOWS" ] ; then
-         GPAC_LIBS="$GPAC_LIBS -lwinmm"
-     fi
+         cc_check "" -lws2_32 && GPAC_LIBS="$GPAC_LIBS -lws2_32"
+         cc_check "" -lwinmm && GPAC_LIBS="$GPAC_LIBS -lwinmm"
