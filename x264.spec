@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?dist}
+Release: 2%{?gver}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -189,14 +189,16 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Wed Mar 05 2014 Sérgio Basto <sergio@serjux.com> - 0.140-2.20140122gitde0bc36
+- bootstrap x264 to avoid: 
+  /usr/bin/ld: warning: libx264.so.138, needed by
+  /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64/libavcodec.so, may conflict with
+  libx264.so.140
+
 * Wed Jan 22 2014 Sérgio Basto <sergio@serjux.com> - 0.140-1.20140122gitde0bc36
 - Update to 0.140 git de0bc36 (stable branch)
 - drop visualize options, ./configure doesn't have --enable-visualize or --disable-visualize, 
 anymore
-- bootstrap to avoid: 
-  /usr/bin/ld: warning: libx264.so.138, needed by
-  /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64/libavcodec.so, may conflict with
-  libx264.so.140
 
 * Tue Nov 05 2013 Sérgio Basto <sergio@serjux.com> - 0.138-2.20131030-c628e3b
 - Unbootstrap.
