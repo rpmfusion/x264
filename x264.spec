@@ -5,7 +5,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-#global _with_bootstrap 1
+%global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -193,6 +193,10 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 - Update to 0.140 git de0bc36 (stable branch)
 - drop visualize options, ./configure doesn't have --enable-visualize or --disable-visualize, 
 anymore
+- bootstrap to avoid: 
+  /usr/bin/ld: warning: libx264.so.138, needed by
+  /usr/lib/gcc/x86_64-redhat-linux/4.8.2/../../../../lib64/libavcodec.so, may conflict with
+  libx264.so.140
 
 * Tue Nov 05 2013 Sérgio Basto <sergio@serjux.com> - 0.138-2.20131030-c628e3b
 - Unbootstrap.
