@@ -5,7 +5,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -24,7 +24,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?dist}
+Release: 3%{?gver}%{?dist}%{?_with_bootstrap:_bootstrap}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -189,6 +189,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Mar 10 2014 Sérgio Basto <sergio@serjux.com> - 0.140-3.20140122gitde0bc36
+- Un-boostrap
+
 * Wed Mar 05 2014 Sérgio Basto <sergio@serjux.com> - 0.140-2.20140122gitde0bc36
 - bootstrap x264 to avoid: 
   /usr/bin/ld: warning: libx264.so.138, needed by
