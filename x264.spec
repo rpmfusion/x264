@@ -1,7 +1,7 @@
-# globals for x264-0.142-20141221-6a301b6.tar.bz2
-%global api 142
-%global gitdate 20141221
-%global gitversion 6a301b6
+# globals for x264-0.144-20150225-c8a773e.tar.bz2
+%global api 144
+%global gitdate 20150225
+%global gitversion c8a773e
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -25,7 +25,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 12%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -194,6 +194,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Sat Jun 06 2015 Sérgio Basto <sergio@serjux.com> - 0.144-1.20150225gitc8a773e
+- Update to x264-0.144, soname bump, git c8a773e from date 20150225 .
+
 * Mon Jun 01 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 0.142-12.20141221git6a301b6
 - Added patch to make it build on AArch64.
 
