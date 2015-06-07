@@ -25,7 +25,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 12%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
@@ -36,6 +36,9 @@ BuildRequires: perl-Digest-MD5
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
 Patch10: x264-gpac.patch
+
+# NEON is not optional in AArch64 cpus so no need to play with cflags
+Patch11: dont-play-with-cflags-on-aarch64.patch
 
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
@@ -91,6 +94,7 @@ This package contains the development files.
 pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch10 -p1 -b .gpac
+%patch11 -p1
 popd
 
 variants="generic generic10"
@@ -190,8 +194,11 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Jun 01 2015 Marcin Juszkiewicz <mjuszkiewicz@redhat.com> - 0.142-12.20141221git6a301b6
+- Added patch to make it build on AArch64.
+
 * Mon Dec 22 2014 Sérgio Basto <sergio@serjux.com> - 0.142-11.20141221git6a301b6
-- Update to x264-0.142 to git 6a301b6
+- Update x264-0.142 to git 6a301b6
 
 * Sun Oct 19 2014 Sérgio Basto <sergio@serjux.com> - 0.142-10.20140826git021c0dc
 - Rebuilt for FFmpeg 2.4.3
