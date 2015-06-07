@@ -14,7 +14,7 @@
 %global _without_libswscale  1
 }
 #Whitelist of arches with dedicated ASM code
-%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc}
+%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc} aarch64
 %global _without_asm 1
 %endif
 
