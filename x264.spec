@@ -1,7 +1,7 @@
-# globals for x264-0.144-20150225-c8a773e.tar.bz2
-%global api 144
-%global gitdate 20150225
-%global gitversion c8a773e
+# globals for x264-0.148-20151020-a0cd7d3.tar.bz2
+%global api 148
+%global gitdate 20151020
+%global gitversion a0cd7d3
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -17,6 +17,9 @@
 %ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc} aarch64
 %global _without_asm 1
 %endif
+#ifarch i686 armv5tel armv6l
+#global _without_asm 1
+#endif
 
 %if 0%{?rhel}
 %global _without_asm 1
@@ -36,9 +39,6 @@ BuildRequires: perl-Digest-MD5
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
 Patch10: x264-gpac.patch
-
-# NEON is not optional in AArch64 cpus so no need to play with cflags
-Patch11: dont-play-with-cflags-on-aarch64.patch
 
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
@@ -94,7 +94,6 @@ This package contains the development files.
 pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch10 -p1 -b .gpac
-%patch11 -p1
 popd
 
 variants="generic generic10"
@@ -112,9 +111,6 @@ pushd generic
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-%ifarch i686 armv5tel armv6l
-	--disable-asm \
-%endif
 
 %{__make} %{?_smp_mflags}
 popd
@@ -133,9 +129,6 @@ pushd generic10
 %{x_configure}\
 	--host=%{_target_platform} \
 	--libdir=%{_libdir} \
-%ifarch i686 armv5tel armv6l
-	--disable-asm \
-%endif
 	--bit-depth=10
 
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
@@ -194,6 +187,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Wed Oct 21 2015 Sérgio Basto <sergio@serjux.com> - 0.148-1.20151020gita0cd7d3
+- Update to x264-0.148, soname bump, git a0cd7d3, date 20151020 .
+
 * Sat Jun 06 2015 Sérgio Basto <sergio@serjux.com> - 0.144-1.20150225gitc8a773e
 - Update to x264-0.144, soname bump, git c8a773e from date 20150225 .
 
