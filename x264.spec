@@ -1,7 +1,7 @@
-# globals for x264-0.148-20151020-a0cd7d3.tar.bz2
+# globals for x264-0.148-20160118-5c65704.tar.bz2
 %global api 148
-%global gitdate 20151020
-%global gitversion a0cd7d3
+%global gitdate 20160118
+%global gitversion 5c65704
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
@@ -17,20 +17,17 @@
 %ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc} aarch64
 %global _without_asm 1
 %endif
+#Commented out may be used later
 #ifarch i686 armv5tel armv6l
 #global _without_asm 1
 #endif
 
-%if 0%{?rhel}
-%global _without_asm 1
-%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
-Group: System Environment/Libraries
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
@@ -44,7 +41,6 @@ Patch10: x264-gpac.patch
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{!?_without_asm:BuildRequires: yasm >= 1.0.0}
-Requires: %{name}-libs = %{version}-%{release}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -54,7 +50,6 @@ This package contains the frontend.
 
 %package libs
 Summary: Library for encoding H264/AVC video streams
-Group: Development/Libraries
 
 %description libs
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -62,7 +57,6 @@ scratch.
 
 %package devel
 Summary: Development files for the x264 library
-Group: Development/Libraries
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: pkgconfig
 
@@ -73,12 +67,7 @@ scratch.
 This package contains the development files.
 
 %global x_configure \
-./configure \\\
-	--prefix=%{_prefix} \\\
-	--exec-prefix=%{_exec_prefix} \\\
-	--bindir=%{_bindir} \\\
-	--includedir=%{_includedir} \\\
-	--extra-cflags="$RPM_OPT_FLAGS" \\\
+%configure \\\
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
@@ -87,7 +76,6 @@ This package contains the development files.
 	--enable-shared \\\
 	--system-libx264 \\\
 	--enable-pic
-
 
 %prep
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
@@ -108,9 +96,7 @@ done
 
 %build
 pushd generic
-%{x_configure}\
-	--host=%{_target_platform} \
-	--libdir=%{_libdir} \
+%{x_configure}
 
 %{__make} %{?_smp_mflags}
 popd
@@ -118,8 +104,8 @@ popd
 %ifarch i686
 pushd simd
 %{x_configure}\
-	--host=%{_target_platform} \
-	--libdir=%{_libdir}/sse2 \
+	--enable-asm \
+	--libdir=%{_libdir}/sse2
 
 %{__make} %{?_smp_mflags}
 popd
@@ -127,8 +113,6 @@ popd
 
 pushd generic10
 %{x_configure}\
-	--host=%{_target_platform} \
-	--libdir=%{_libdir} \
 	--bit-depth=10
 
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
@@ -138,11 +122,11 @@ popd
 
 %install
 pushd generic
-%{__make} DESTDIR=%{buildroot} install
+%make_install
 popd
 %ifarch i686
 pushd simd
-%{__make} DESTDIR=%{buildroot} install
+%make_install
 rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
 popd
 %endif
@@ -162,12 +146,12 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %postun libs -p /sbin/ldconfig
 
 %files
-%defattr(644, root, root, 0755)
-%doc generic/AUTHORS generic/COPYING
-%attr(755,root,root) %{_bindir}/x264
+%{!?_licensedir:%global license %doc}
+%doc generic/AUTHORS
+%license generic/COPYING
+%{_bindir}/x264
 
 %files libs
-%defattr(644, root, root, 0755)
 %{_libdir}/libx264.so.%{api}
 %ifarch i686
 %{_libdir}/sse2/libx264.so.%{api}
@@ -175,7 +159,6 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so.%{api}
 
 %files devel
-%defattr(644, root, root, 0755)
 %doc generic/doc/*
 %{_includedir}/x264.h
 %{_includedir}/x264_config.h
@@ -187,6 +170,20 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Jan 18 2016 Sérgio Basto <sergio@serjux.com> - 0.148-2.20151020gita0cd7d3
+- Update x264 to 0.148-20160118-5c65704
+
+* Fri Nov 27 2015 Simone Caronni <negativo17@gmail.com>
+- Remove obsolete SPEC file tags, defattr were also breaking file permissions,
+  all libraries were not executable.
+- Enable optimizations in RHEL, they are working since RHEL 6:
+  https://bugzilla.rpmfusion.org/show_bug.cgi?id=3260
+- Add license and make_install macro as per packaging guidelines.
+- Remove explicit dependency on libs subpackage for main x264 binary, it is
+  added automatically.
+- Use the default configure macro and remove redundant parameters. Optimizations
+  (build flags) are now added by default.
+
 * Wed Oct 21 2015 Sérgio Basto <sergio@serjux.com> - 0.148-1.20151020gita0cd7d3
 - Update to x264-0.148, soname bump, git a0cd7d3, date 20151020 .
 
