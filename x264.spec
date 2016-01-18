@@ -14,19 +14,16 @@
 %global _without_libswscale  1
 }
 #Whitelist of arches with dedicated ASM code
-%ifnarch x86_64 i686 %{arm} ppc ppc64 %{sparc} aarch64
+#i686 is disabled on purpose - re-enabled with sse2 build
+%ifnarch x86_64 armv7hl armv7hnl ppc ppc64 %{sparc} aarch64
 %global _without_asm 1
 %endif
-#Commented out may be used later
-#ifarch i686 armv5tel armv6l
-#global _without_asm 1
-#endif
 
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -41,6 +38,8 @@ Patch10: x264-gpac.patch
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{!?_without_asm:BuildRequires: yasm >= 1.0.0}
+# we need to enforce the exact EVR for an ISA - not only the same ABI
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -170,6 +169,11 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Jan 18 2016 Nicolas Chauvet <kwizart@gmail.com> - 0.148-3.20160118git5c65704
+- Restore explicit dependency on -libs - enforce %%{_isa}
+- Expand arm arches where asm is available.
+- Restore asm only on sse2 and later capable i686
+
 * Mon Jan 18 2016 Sérgio Basto <sergio@serjux.com> - 0.148-2.20151020gita0cd7d3
 - Update x264 to 0.148-20160118-5c65704
 
@@ -179,8 +183,6 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 - Enable optimizations in RHEL, they are working since RHEL 6:
   https://bugzilla.rpmfusion.org/show_bug.cgi?id=3260
 - Add license and make_install macro as per packaging guidelines.
-- Remove explicit dependency on libs subpackage for main x264 binary, it is
-  added automatically.
 - Use the default configure macro and remove redundant parameters. Optimizations
   (build flags) are now added by default.
 
