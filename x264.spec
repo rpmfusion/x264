@@ -23,7 +23,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -70,7 +70,6 @@ This package contains the development files.
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
-	%{?_without_asm:--disable-asm} \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
@@ -95,7 +94,8 @@ done
 
 %build
 pushd generic
-%{x_configure}
+%{x_configure}\
+	%{?_without_asm:--disable-asm}
 
 %{__make} %{?_smp_mflags}
 popd
@@ -103,7 +103,6 @@ popd
 %ifarch i686
 pushd simd
 %{x_configure}\
-	--enable-asm \
 	--libdir=%{_libdir}/sse2
 
 %{__make} %{?_smp_mflags}
@@ -112,6 +111,7 @@ popd
 
 pushd generic10
 %{x_configure}\
+	%{?_without_asm:--disable-asm}\
 	--bit-depth=10
 
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
@@ -169,6 +169,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Tue Jan 19 2016 Sérgio Basto <sergio@serjux.com> - 0.148-4.20160118git5c65704
+- Fix enable-asm
+
 * Mon Jan 18 2016 Nicolas Chauvet <kwizart@gmail.com> - 0.148-3.20160118git5c65704
 - Restore explicit dependency on -libs - enforce %%{_isa}
 - Expand arm arches where asm is available.
