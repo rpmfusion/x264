@@ -23,7 +23,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 5%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -38,6 +38,10 @@ Patch10: x264-gpac.patch
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 %{!?_without_asm:BuildRequires: yasm >= 1.0.0}
+# for sse2 build
+%ifarch i686
+BuildRequires: yasm >= 1.0.0
+%endif
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -169,6 +173,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Wed Jan 20 2016 Sérgio Basto <sergio@serjux.com> - 0.148-5.20160118git5c65704
+- Fix enable-asm #2
+
 * Tue Jan 19 2016 Sérgio Basto <sergio@serjux.com> - 0.148-4.20160118git5c65704
 - Fix enable-asm
 
