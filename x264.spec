@@ -22,7 +22,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -114,7 +114,9 @@ popd
 
 pushd generic10
 %{x_configure}\
+%ifnarch i686
 	%{?_without_asm:--disable-asm}\
+%endif
 	--bit-depth=10
 
 sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
@@ -172,6 +174,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Mon Aug 01 2016 Sérgio Basto <sergio@serjux.com> - 0.148-9.20160614gita5e06b9
+- Enable asm in build with 10bit on i686
+
 * Sat Jul 30 2016 Julian Sikorski <belegdol@fedoraproject.org> - 0.148-8.20160614gita5e06b9
 - Rebuilt for ffmpeg-3.1.1
 
