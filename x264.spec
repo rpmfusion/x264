@@ -22,7 +22,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 10%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: http://developers.videolan.org/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -150,12 +150,13 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %postun libs -p /sbin/ldconfig
 
 %files
-%{!?_licensedir:%global license %doc}
 %doc generic/AUTHORS
 %license generic/COPYING
 %{_bindir}/x264
 
 %files libs
+%doc generic/AUTHORS
+%license generic/COPYING
 %{_libdir}/libx264.so.%{api}
 %ifarch i686
 %{_libdir}/sse2/libx264.so.%{api}
@@ -174,6 +175,9 @@ touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_incl
 %{_libdir}/libx26410b.so
 
 %changelog
+* Thu Aug 18 2016 Sérgio Basto <sergio@serjux.com> - 0.148-10.20160614gita5e06b9
+- Add license tag also to x264-libs
+
 * Mon Aug 01 2016 Sérgio Basto <sergio@serjux.com> - 0.148-9.20160614gita5e06b9
 - Enable asm in build with 10bit on i686
 
