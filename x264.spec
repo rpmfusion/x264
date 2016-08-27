@@ -14,31 +14,42 @@
 %global _without_libswscale  1
 }
 #Whitelist of arches with dedicated ASM code
-#i686 is disabled on purpose - re-enabled with sse2 build
-%ifnarch x86_64 armv7hl armv7hnl ppc ppc64 %{sparc} aarch64
+%global asmarch x86_64 armv7hl armv7hnl ppc64le aarch64
+# list of arches where ASM must be optional
+%global simdarch i686 ppc64
+%ifnarch %{asmarch}
 %global _without_asm 1
+%endif
+%ifarch i686
+%global slibdir %{_libdir}/sse2
+%endif
+%ifarch ppc64
+%global slibdir %{_libdir}/altivec
 %endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 10%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
-URL: http://developers.videolan.org/x264.html
+URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
-BuildRequires: perl-Digest-MD5
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
+# add 10b suffix to high bit depth build
+Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
 
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
-%{!?_without_asm:BuildRequires: yasm >= 1.0.0}
-# for sse2 build
-%ifarch i686
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
+%ifarch armv7hl armv7hnl
+BuildRequires: execstack
+%endif
+%ifarch %{asmarch} %{simdarch}
 BuildRequires: yasm >= 1.0.0
 %endif
 # we need to enforce the exact EVR for an ISA - not only the same ABI
@@ -73,6 +84,7 @@ This package contains the development files.
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
+	--disable-opencl \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
@@ -82,12 +94,13 @@ This package contains the development files.
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
 pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
+%patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
 popd
 
 variants="generic generic10"
-%ifarch i686
-variants="$variants simd"
+%ifarch %{simdarch}
+variants="$variants simd simd10"
 %endif
 for variant in $variants ; do
   rm -rf ${variant}
@@ -103,78 +116,103 @@ pushd generic
 %{__make} %{?_smp_mflags}
 popd
 
-%ifarch i686
-pushd simd
-%{x_configure}\
-	--libdir=%{_libdir}/sse2
-
-%{__make} %{?_smp_mflags}
-popd
-%endif
-
 pushd generic10
 %{x_configure}\
-%ifnarch i686
 	%{?_without_asm:--disable-asm}\
-%endif
+	--disable-cli\
 	--bit-depth=10
 
-sed -i -e "s/SONAME=libx264.so./SONAME=libx26410b.so./" config.mak
+%{__make} %{?_smp_mflags}
+popd
+
+%ifarch %{simdarch}
+pushd simd
+%{x_configure}\
+	--libdir=%{slibdir}
 
 %{__make} %{?_smp_mflags}
 popd
 
-%install
-pushd generic
-%make_install
-popd
-%ifarch i686
-pushd simd
-%make_install
-rm %{buildroot}%{_libdir}/*/pkgconfig/x264.pc
+pushd simd10
+%{x_configure}\
+	--disable-cli\
+	--libdir=%{slibdir}\
+	--bit-depth=10
+
+%{__make} %{?_smp_mflags}
 popd
 %endif
-pushd generic10
-SONAME=`grep "^SONAME=" config.mak`
-export $SONAME
-install -m 755 ${SONAME} %{buildroot}%{_libdir}
-ln -fs ${SONAME} %{buildroot}%{_libdir}/libx26410b.so
+
+%install
+for variant in generic generic10 ; do
+pushd ${variant}
+%make_install
 popd
+done
+%ifarch %{simdarch}
+for variant in simd simd10 ; do
+pushd ${variant}
+%make_install
+rm %{buildroot}%{slibdir}/pkgconfig/x264.pc
+popd
+done
+%endif
 
 #Fix timestamp on x264 generated headers
 touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
+%ifarch armv7hl armv7hnl
+execstack -c %{buildroot}%{_libdir}/libx264{,10b}.so.%{api}
+%endif
+
+install -dm755 %{buildroot}%{_pkgdocdir}
+install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
 
 %files
-%doc generic/AUTHORS
-%license generic/COPYING
 %{_bindir}/x264
 
 %files libs
-%doc generic/AUTHORS
-%license generic/COPYING
+%dir %{_pkgdocdir}
+%{_pkgdocdir}/AUTHORS
+%license %{_pkgdocdir}/COPYING
 %{_libdir}/libx264.so.%{api}
-%ifarch i686
-%{_libdir}/sse2/libx264.so.%{api}
-%endif
 %{_libdir}/libx26410b.so.%{api}
+%ifarch %{simdarch}
+%{slibdir}/libx264.so.%{api}
+%{slibdir}/libx26410b.so.%{api}
+%endif
 
 %files devel
 %doc generic/doc/*
 %{_includedir}/x264.h
 %{_includedir}/x264_config.h
 %{_libdir}/libx264.so
-%{_libdir}/pkgconfig/%{name}.pc
-%ifarch i686
-%{_libdir}/sse2/libx264.so
-%endif
 %{_libdir}/libx26410b.so
+%{_libdir}/pkgconfig/%{name}.pc
+%ifarch %{simdarch}
+%{slibdir}/libx264.so
+%{slibdir}/libx26410b.so
+%endif
 
 %changelog
+* Fri Aug 26 2016 Dominik Mierzejewski <rpm@greysector.net> - 0.148-11.20160614gita5e06b9
+- rework asm treatment on i686 and ppc64
+- fix adding the 10b suffix to the library name
+- correct the list of ASM-enabled arches:
+  * ppc64 can be Power5, which doesn't have AltiVec
+  * ppc64le always has it
+  * no implementation for sparc
+- force non-executable stack on armv7 (#3975)
+- explicitly disable OpenCL support, it's dlopened at the moment
+  and not working without ocl-icd-devel
+- drop doc and license from main package, libs already contain it
+- update URL
+
 * Thu Aug 18 2016 Sérgio Basto <sergio@serjux.com> - 0.148-10.20160614gita5e06b9
 - Add license tag also to x264-libs
 
