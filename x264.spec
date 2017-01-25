@@ -1,7 +1,7 @@
-# globals for x264-0.148-20161201-4d5c8b0.tar.bz2
+# globals for x264-0.148-20170121-97eaef2.tar.bz2
 %global api 148
-%global gitdate 20161201
-%global gitversion 4d5c8b0
+%global gitdate 20170121
+%global gitversion 97eaef2
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 14%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 15%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -201,6 +201,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed Jan 25 2017 Sérgio Basto <sergio@serjux.com> - 0.148-15.20170121git97eaef2
+- Update x264 to git stable snapshot of 20170121
+
 * Sat Dec 03 2016 Sérgio Basto <sergio@serjux.com> - 0.148-14.20161201git4d5c8b0
 - Update to x264-0.148-20161201-4d5c8b0 stable branch
 - Improve x264-snapshot.sh to use date from last commit and print the headers to
