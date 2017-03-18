@@ -7,7 +7,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-#global _with_bootstrap 1
+%global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 15%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 16%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -201,6 +201,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Sat Mar 18 2017 Sérgio Basto <sergio@serjux.com> - 0.148-16.20170121git97eaef2_bootstrap
+- Bootstrap for ppc64, ppc64le and aarch64
+
 * Wed Jan 25 2017 Sérgio Basto <sergio@serjux.com> - 0.148-15.20170121git97eaef2
 - Update x264 to git stable snapshot of 20170121
 
