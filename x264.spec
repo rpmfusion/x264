@@ -1,7 +1,7 @@
-# globals for x264-0.148-20170519-d32d7bf.tar.bz2
+# globals for x264-0.148-20170521-aaa9aa8.tar.bz2
 %global api 148
-%global gitdate 20170519
-%global gitversion d32d7bf
+%global gitdate 20170521
+%global gitversion aaa9aa8
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 20%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 21%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -201,6 +201,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Jun 26 2017 Sérgio Basto <sergio@serjux.com> - 0.148-21.20170521gitaaa9aa8
+- Update x264 to x264-0.148-20170521-aaa9aa8
+
 * Mon May 22 2017 Sérgio Basto <sergio@serjux.com> - 0.148-20.20170519gitd32d7bf
 - Update x264 to x264-0.148-20170519-d32d7bf
 
