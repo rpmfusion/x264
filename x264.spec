@@ -201,7 +201,7 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
-* Sat Dec 30 2017 Sérgio Basto <sergio@serjux.com> - 0.152-1
+* Sat Dec 30 2017 Sérgio Basto <sergio@serjux.com> - 0.152-1.20171224gite9a5903_bootstrap
 - Update x264 to 0.152 and switch asm compiler from yasm to nasm
 
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.148-22.20170521gitaaa9aa8
