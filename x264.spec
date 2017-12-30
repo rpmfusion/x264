@@ -1,7 +1,7 @@
-# globals for x264-0.148-20170521-aaa9aa8.tar.bz2
-%global api 148
-%global gitdate 20170521
-%global gitversion aaa9aa8
+# globals for x264-0.152-20171224-e9a5903.tar.bz2
+%global api 152
+%global gitdate 20171224
+%global gitversion e9a5903
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -30,8 +30,8 @@
 
 Summary: H264/AVC video streams encoder
 Name: x264
-Version: 0.%{api}
-Release: 22%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Version: 0.152
+Release: 1%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -51,7 +51,7 @@ Patch10: x264-gpac.patch
 BuildRequires: execstack
 %endif
 %ifarch %{asmarch} %{simdarch}
-BuildRequires: yasm >= 1.0.0
+BuildRequires: nasm
 %endif
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
@@ -201,6 +201,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Sat Dec 30 2017 Sérgio Basto <sergio@serjux.com> - 0.152-1
+- Update x264 to 0.152 and switch asm compiler from yasm to nasm
+
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.148-22.20170521gitaaa9aa8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 
