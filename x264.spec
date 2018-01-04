@@ -7,7 +7,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -201,6 +201,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Thu Jan 04 2018 Sérgio Basto <sergio@serjux.com> - 0.152-2.20171224gite9a5903
+- un-bootstrap x264
+
 * Sat Dec 30 2017 Sérgio Basto <sergio@serjux.com> - 0.152-1.20171224gite9a5903_bootstrap
 - Update x264 to 0.152 and switch asm compiler from yasm to nasm
 
