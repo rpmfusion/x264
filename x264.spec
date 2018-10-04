@@ -44,6 +44,7 @@ Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
 Patch20: x264-sandbox.git-b63c73dc5c37e5405bf032c9113c1daced3e45a4.patch
 
+BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
