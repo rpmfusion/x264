@@ -1,7 +1,7 @@
-# globals for x264-0.152-20171224-e9a5903.tar.bz2
-%global api 152
-%global gitdate 20171224
-%global gitversion e9a5903
+# globals for x264-0.155-20180806-0a84d98.tar.bz2
+%global api 155
+%global gitdate 20180806
+%global gitversion 0a84d98
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -42,6 +42,7 @@ Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
+Patch20: x264-sandbox.git-b63c73dc5c37e5405bf032c9113c1daced3e45a4.patch
 
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
@@ -97,6 +98,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
+%patch20 -p1 -b .stack_align
 popd
 
 variants="generic generic10"
@@ -201,6 +203,12 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 0.155-8.20180806git0a84d98
+- Update x264 to 0.155
+- Rebase x264-10b.patch
+- Add a patch to fix linking with --system-libx264 on x86
+  ( https://patches.videolan.org/patch/21704/ )
+
 * Sun Aug 19 2018 Leigh Scott <leigh123linux@googlemail.com> - 0.152-7.20171224gite9a5903
 - Rebuilt for Fedora 29 Mass Rebuild binutils issue
 
