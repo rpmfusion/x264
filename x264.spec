@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -148,7 +148,8 @@ popd
 %endif
 
 %install
-for variant in generic generic10 ; do
+# NOTE: the order is important here! We want the generic devel stuff
+for variant in generic10 generic ; do
 pushd ${variant}
 %make_install
 popd
@@ -204,6 +205,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed Nov 07 2018 Stefan Becker <chemobejk@gmail.com> - 0.155-2.20180806git0a84d98
+- reverse order of generic/generic10 install to fix -devel contents (rfbz #5071)
+
 * Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 0.155-8.20180806git0a84d98
 - Update x264 to 0.155
 - Rebase x264-10b.patch
