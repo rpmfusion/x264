@@ -1,12 +1,13 @@
-# globals for x264-0.148-20160614-a5e06b9.tar.bz2
+# globals for x264-0.148-20170521-aaa9aa8.tar.bz2
 %global api 148
-%global gitdate 20160614
-%global gitversion a5e06b9
+%global gitdate 20170521
+%global gitversion aaa9aa8
+
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-#global _with_bootstrap 1
+%global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -30,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 23%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -42,7 +43,7 @@ Patch0: x264-nover.patch
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
 
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel zlib-devel openssl-devel libpng-devel libjpeg-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
@@ -52,6 +53,7 @@ BuildRequires: execstack
 %ifarch %{asmarch} %{simdarch}
 BuildRequires: yasm >= 1.0.0
 %endif
+BuildRequires: gcc
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -62,6 +64,7 @@ scratch.
 This package contains the frontend.
 
 %package libs
+%{?el7:BuildRequires: epel-rpm-macros}
 Summary: Library for encoding H264/AVC video streams
 
 %description libs
@@ -85,7 +88,7 @@ This package contains the development files.
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
 	--disable-opencl \\\
-	--enable-debug \\\
+	--disable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
 	--enable-pic
@@ -113,7 +116,7 @@ pushd generic
 %{x_configure}\
 	%{?_without_asm:--disable-asm}
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 pushd generic10
@@ -122,7 +125,7 @@ pushd generic10
 	--disable-cli\
 	--bit-depth=10
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 %ifarch %{simdarch}
@@ -130,7 +133,7 @@ pushd simd
 %{x_configure}\
 	--libdir=%{slibdir}
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 pushd simd10
@@ -139,7 +142,7 @@ pushd simd10
 	--libdir=%{slibdir}\
 	--bit-depth=10
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 %endif
 
@@ -153,7 +156,7 @@ done
 for variant in simd simd10 ; do
 pushd ${variant}
 %make_install
-rm %{buildroot}%{slibdir}/pkgconfig/x264.pc
+rm -f %{buildroot}%{slibdir}/pkgconfig/x264.pc
 popd
 done
 %endif
@@ -167,19 +170,20 @@ execstack -c %{buildroot}%{_libdir}/libx264{,10b}.so.%{api}
 %endif
 
 install -dm755 %{buildroot}%{_pkgdocdir}
-install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
+install -pm644 generic/AUTHORS %{buildroot}%{_pkgdocdir}/
+cp -a generic/doc %{buildroot}%{_pkgdocdir}/
 
-%post libs -p /sbin/ldconfig
 
-%postun libs -p /sbin/ldconfig
+%ldconfig_scriptlets libs
+
 
 %files
 %{_bindir}/x264
 
 %files libs
-%dir %{_pkgdocdir}
-%{_pkgdocdir}/AUTHORS
-%license %{_pkgdocdir}/COPYING
+%{_pkgdocdir}/
+%exclude %{_pkgdocdir}/doc
+%license generic/COPYING
 %{_libdir}/libx264.so.%{api}
 %{_libdir}/libx26410b.so.%{api}
 %ifarch %{simdarch}
@@ -188,7 +192,7 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %files devel
-%doc generic/doc/*
+%{_pkgdocdir}/doc/
 %{_includedir}/x264.h
 %{_includedir}/x264_config.h
 %{_libdir}/libx264.so
@@ -200,6 +204,48 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Thu Nov 22 2018 Antonio Trande <sagitter@fedoraproject.org> - 0.148-23.20170521gitaaa9aa8
+- Rebuild for ffmpeg-3.* on el7
+- Rebuild for x265-2.9 on el7
+- Set Make macros
+- Disable debug builds
+- Avoid mixed use of documentation macros
+
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.148-22.20170521gitaaa9aa8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
+* Mon Jun 26 2017 Sérgio Basto <sergio@serjux.com> - 0.148-21.20170521gitaaa9aa8
+- Update x264 to x264-0.148-20170521-aaa9aa8
+
+* Mon May 22 2017 Sérgio Basto <sergio@serjux.com> - 0.148-20.20170519gitd32d7bf
+- Update x264 to x264-0.148-20170519-d32d7bf
+
+* Sat Apr 29 2017 Leigh Scott <leigh123linux@googlemail.com> - 0.148-19.20170121git97eaef2
+- Rebuild for ffmpeg update
+
+* Wed Mar 22 2017 Sérgio Basto <sergio@serjux.com> - 0.148-18.20170121git97eaef2
+- Unbootstrap
+
+* Mon Mar 20 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 0.148-17.20170121git97eaef2_bootstrap
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
+* Sat Mar 18 2017 Sérgio Basto <sergio@serjux.com> - 0.148-16.20170121git97eaef2_bootstrap
+- Bootstrap for ppc64, ppc64le and aarch64
+
+* Wed Jan 25 2017 Sérgio Basto <sergio@serjux.com> - 0.148-15.20170121git97eaef2
+- Update x264 to git stable snapshot of 20170121
+
+* Sat Dec 03 2016 Sérgio Basto <sergio@serjux.com> - 0.148-14.20161201git4d5c8b0
+- Update to x264-0.148-20161201-4d5c8b0 stable branch
+- Improve x264-snapshot.sh to use date from last commit and print the headers to
+  include in x264.spec
+
+* Sat Nov 05 2016 Sérgio Basto <sergio@serjux.com> - 0.148-13.20160924git86b7198
+- Rebuilt for new ffmpeg
+
+* Tue Sep 27 2016 Sérgio Basto <sergio@serjux.com> - 0.148-12.20160924git86b7198
+- Update to 0.148-20160924-86b7198 version
+
 * Fri Aug 26 2016 Dominik Mierzejewski <rpm@greysector.net> - 0.148-11.20160614gita5e06b9
 - rework asm treatment on i686 and ppc64
 - fix adding the 10b suffix to the library name
