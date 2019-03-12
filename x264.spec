@@ -1,7 +1,7 @@
-# globals for x264-0.155-20180806-0a84d98.tar.bz2
-%global api 155
-%global gitdate 20180806
-%global gitversion 0a84d98
+# globals for x264-0.157-20190303-72db437.tar.bz2
+%global api 157
+%global gitdate 20190303
+%global gitversion 72db437
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -42,7 +42,6 @@ Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
-Patch20: x264-sandbox.git-b63c73dc5c37e5405bf032c9113c1daced3e45a4.patch
 
 BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
@@ -99,7 +98,6 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
-%patch20 -p1 -b .stack_align
 popd
 
 variants="generic generic10"
@@ -205,6 +203,10 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Tue Mar 12 2019 Sérgio Basto <sergio@serjux.com> - 0.157-1.20190303git72db437
+- Update to 0.157 (stable branch)
+- Rebase patches
+
 * Tue Mar 05 2019 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.155-3.20180806git0a84d98
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 diff -up generic10/configure.10b generic10/configure
---- generic10/configure.10b	2016-08-26 19:48:41.447839506 +0200
-+++ generic10/configure	2016-08-26 19:49:26.902033893 +0200
-@@ -1466,6 +1466,12 @@ PROF_USE_LD=$PROF_USE_LD
+--- generic10/configure.10b    2016-08-26 19:48:41.447839506 +0200
++++ generic10/configure    2016-08-26 19:49:26.902033893 +0200
+@@ -1473,6 +1473,12 @@ PROF_USE_LD=$PROF_USE_LD
  HAVE_OPENCL=$opencl
  EOF
  
@@ -14,7 +14,7 @@ diff -up generic10/configure.10b generic10/configure
  if [ $compiler_style = MS ]; then
      echo 'CC_O=-Fo$@' >> config.mak
  else
-@@ -1505,7 +1511,7 @@ if [ "$shared" = "yes" ]; then
+@@ -1512,7 +1518,7 @@ if [ "$shared" = "yes" ]; then
          echo "SOFLAGS=-shared -Wl,-h,\$(SONAME) $SOFLAGS" >> config.mak
      else
          echo "SOSUFFIX=so" >> config.mak
@@ -24,9 +24,9 @@ diff -up generic10/configure.10b generic10/configure
      fi
      echo 'default: lib-shared' >> config.mak
 diff -up generic10/Makefile.10b generic10/Makefile
---- generic10/Makefile.10b	2016-06-14 14:04:37.000000000 +0200
-+++ generic10/Makefile	2016-08-26 19:48:41.449839514 +0200
-@@ -405,7 +405,7 @@ ifneq ($(IMPLIBNAME),)
+--- generic10/Makefile.10b 2016-06-14 14:04:37.000000000 +0200
++++ generic10/Makefile 2016-08-26 19:48:41.449839514 +0200
+@@ -398,7 +398,7 @@ ifneq ($(IMPLIBNAME),)
  	$(INSTALL) -m 755 $(SONAME) $(DESTDIR)$(bindir)
  	$(INSTALL) -m 644 $(IMPLIBNAME) $(DESTDIR)$(libdir)
  else ifneq ($(SONAME),)
