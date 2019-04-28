@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -206,6 +206,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Sun Apr 28 2019 Leigh Scott <leigh123linux@gmail.com> - 0.157-4.20190303git72db437
+- Fix opencl dlopen (rfbz#5185)
+
 * Tue Mar 12 2019 Leigh Scott <leigh123linux@googlemail.com> - 0.157-3.20190303git72db437
 - Disable bootstrap build
 
