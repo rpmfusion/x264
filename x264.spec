@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -42,6 +42,7 @@ Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
+Patch11: x264-opencl.patch
 Patch20: x264-sandbox.git-b63c73dc5c37e5405bf032c9113c1daced3e45a4.patch
 
 BuildRequires: gcc
@@ -66,6 +67,7 @@ This package contains the frontend.
 
 %package libs
 Summary: Library for encoding H264/AVC video streams
+Recommends: %{_libdir}/libOpenCL.so.1
 
 %description libs
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -99,6 +101,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
+%patch11 -p1 -b .opencl
 %patch20 -p1 -b .stack_align
 popd
 
@@ -205,6 +208,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Sun Apr 28 2019 Leigh Scott <leigh123linux@gmail.com> - 0.155-3.20180806git0a84d98
+- Fix opencl dlopen (rfbz#5185)
+
 * Wed Nov 07 2018 Stefan Becker <chemobejk@gmail.com> - 0.155-2.20180806git0a84d98
 - reverse order of generic/generic10 install to fix -devel contents (rfbz #5071)
 
