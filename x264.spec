@@ -42,6 +42,7 @@ Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
+Patch11: x264-opencl.patch
 
 BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
@@ -65,6 +66,7 @@ This package contains the frontend.
 
 %package libs
 Summary: Library for encoding H264/AVC video streams
+Recommends: %{_libdir}/libOpenCL.so.1
 
 %description libs
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -98,6 +100,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
+%patch11 -p1 -b .opencl
 popd
 
 variants="generic generic10"
