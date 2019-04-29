@@ -210,6 +210,7 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 * Mon Apr 29 2019 Sérgio Basto <sergio@serjux.com> - 0.157-5.20190303git72db437
 - Enable opencl (which is default) only exist --disable-opencl option
 - Disable opencl on 10bit seems that is just prepared for 8bit.
+- Build /usr/bin/x264 with gpac shared lib instead static lib.
 
 * Sun Apr 28 2019 Leigh Scott <leigh123linux@gmail.com> - 0.157-4.20190303git72db437
 - Fix opencl dlopen (rfbz#5185)
