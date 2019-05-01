@@ -7,7 +7,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -27,11 +27,14 @@
 %ifarch ppc64
 %global slibdir %{_libdir}/altivec
 %endif
+%ifarch armv7hl armv7hnl
+%global __brp_mangle_shebangs_exclude_from x264|libx26410b.so.%{api}|libx264.so.%{api}
+%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -207,6 +210,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed May 01 2019 Leigh Scott <leigh123linux@gmail.com> - 0.157-7.20190303git72db437
+- Fix ARM rpm mangle issue
+
 * Tue Apr 30 2019 Sérgio Basto <sergio@serjux.com> - 0.157-6.20190303git72db437_bootstrap
 - Bootstrap to fix arm builds
 
