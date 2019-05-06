@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -89,7 +89,6 @@ This package contains the development files.
 	%{?_without_libavformat:--disable-lavf} \\\
 	%{?_without_libswscale:--disable-swscale} \\\
 	%{!?_with_ffmpegsource:--disable-ffms} \\\
-	--disable-opencl \\\
 	--enable-debug \\\
 	--enable-shared \\\
 	--system-libx264 \\\
@@ -127,6 +126,7 @@ pushd generic10
 %{x_configure}\
 	%{?_without_asm:--disable-asm}\
 	--disable-cli\
+    --disable-opencl \
 	--bit-depth=10
 
 %{__make} %{?_smp_mflags}
@@ -144,6 +144,7 @@ pushd simd10
 %{x_configure}\
 	--disable-cli\
 	--libdir=%{slibdir}\
+    --disable-opencl \
 	--bit-depth=10
 
 %{__make} %{?_smp_mflags}
@@ -208,6 +209,10 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon May 06 2019 Sérgio Basto <sergio@serjux.com> - 0.155-4.20180806git0a84d98
+- Enable opencl (which is default) only exist --disable-opencl option
+- Disable opencl on 10bit seems that is just prepared for 8bit.
+
 * Sun Apr 28 2019 Leigh Scott <leigh123linux@gmail.com> - 0.155-3.20180806git0a84d98
 - Fix opencl dlopen (rfbz#5185)
 
