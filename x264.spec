@@ -34,7 +34,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -210,6 +210,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Tue May 07 2019 Sérgio Basto <sergio@serjux.com> - 0.157-8.20190303git72db437
+- Revert "Build /usr/bin/x264 with gpac shared lib instead static lib."
+
 * Wed May 01 2019 Leigh Scott <leigh123linux@gmail.com> - 0.157-7.20190303git72db437
 - Fix ARM rpm mangle issue
 

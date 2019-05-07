@@ -1,11 +1,13 @@
 --- ./configure.orig	2019-03-12 00:41:42.000000000 +0000
-+++ ./configure	2019-04-29 03:48:04.806285957 +0100
-@@ -1206,7 +1206,7 @@ fi
- 
++++ ./configure	2019-03-12 01:10:12.603640526 +0000
+@@ -1207,7 +1207,9 @@ fi
  if [ "$gpac" = "auto" -a "$lsmash" != "yes" ] ; then
      gpac="no"
--    GPAC_LIBS="-lgpac_static"
-+    GPAC_LIBS="-lgpac"
-     cc_check "" -lz && GPAC_LIBS="$GPAC_LIBS -lz"
+     GPAC_LIBS="-lgpac_static"
+-    cc_check "" -lz && GPAC_LIBS="$GPAC_LIBS -lz"
++    for lib in -lz -lssl -lcrypto -lpng -ljpeg; do
++        cc_check "" $lib && GPAC_LIBS="$GPAC_LIBS $lib"
++    done
      if [ "$SYS" = "WINDOWS" ] ; then
          cc_check "" -lws2_32 && GPAC_LIBS="$GPAC_LIBS -lws2_32"
+         cc_check "" -lwinmm && GPAC_LIBS="$GPAC_LIBS -lwinmm"
