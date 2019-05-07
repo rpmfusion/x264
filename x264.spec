@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 5%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -209,6 +209,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Tue May 07 2019 Sérgio Basto <sergio@serjux.com> - 0.155-5.20180806git0a84d98
+- Revert "Build /usr/bin/x264 with gpac shared lib instead static lib."
+
 * Mon May 06 2019 Sérgio Basto <sergio@serjux.com> - 0.155-4.20180806git0a84d98
 - Enable opencl (which is default) only exist --disable-opencl option
 - Disable opencl on 10bit seems that is just prepared for 8bit.
