@@ -17,7 +17,8 @@ branch=stable
 commit=HEAD
 
 pushd "$tmp"
-git clone git://git.videolan.org/${package}.git -b ${branch}
+git clone https://code.videolan.org/videolan/x264.git -b ${branch}
+
 cd ${package}
 tag=$(git rev-list HEAD -n 1 | cut -c 1-7)
 git checkout ${commit}

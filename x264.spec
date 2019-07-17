@@ -1,7 +1,7 @@
-# globals for x264-0.157-20190303-72db437.tar.bz2
+# globals for x264-0.157-20190717-34c06d1.tar.bz2
 %global api 157
-%global gitdate 20190303
-%global gitversion 72db437
+%global gitdate 20190717
+%global gitversion 34c06d1
 
 %global snapshot %{gitdate}-%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -34,7 +34,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -210,6 +210,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed Jul 17 2019 Sérgio Basto <sergio@serjux.com> - 0.157-9.20190717git34c06d1
+- 0.157 update, date 2019-07-17 (stable branch)
+
 * Tue May 07 2019 Sérgio Basto <sergio@serjux.com> - 0.157-8.20190303git72db437
 - Revert "Build /usr/bin/x264 with gpac shared lib instead static lib."
 
