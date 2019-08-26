@@ -27,9 +27,6 @@
 %ifarch ppc64
 %global slibdir %{_libdir}/altivec
 %endif
-%ifarch armv7hl armv7hnl
-%global __brp_mangle_shebangs_exclude_from x264|libx26410b.so.%{api}|libx264.so.%{api}
-%endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
