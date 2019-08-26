@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 10%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -207,6 +207,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Aug 26 2019 Nicolas Chauvet <kwizart@gmail.com> - 0.157-11.20190717git34c06d1
+- Drop hack for arm builders
+
 * Tue Aug 06 2019 Leigh Scott <leigh123linux@gmail.com> - 0.157-10.20190717git34c06d1
 - Rebuild for new ffmpeg version
 
