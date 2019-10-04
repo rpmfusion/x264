@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 23%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 24%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -153,7 +153,7 @@ pushd ${variant}
 popd
 done
 %ifarch %{simdarch}
-for variant in simd simd10 ; do
+for variant in simd10 simd ; do
 pushd ${variant}
 %make_install
 rm -f %{buildroot}%{slibdir}/pkgconfig/x264.pc
@@ -204,6 +204,9 @@ cp -a generic/doc %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Fri Oct 04 2019 Dominik Mierzejewski <rpm@greysector.net> - 0.148-24.20170521gitaaa9aa8
+- don't overwrite generic headers with 10bit on simdarch (rfbz#5071)
+
 * Thu Nov 22 2018 Antonio Trande <sagitter@fedoraproject.org> - 0.148-23.20170521gitaaa9aa8
 - Rebuild for ffmpeg-3.* on el7
 - Rebuild for x265-2.9 on el7
