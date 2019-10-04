@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 5%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -159,7 +159,7 @@ pushd ${variant}
 popd
 done
 %ifarch %{simdarch}
-for variant in simd simd10 ; do
+for variant in simd10 simd ; do
 pushd ${variant}
 %make_install
 rm %{buildroot}%{slibdir}/pkgconfig/x264.pc
@@ -209,6 +209,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Fri Oct 04 2019 Dominik Mierzejewski <rpm@greysector.net> - 0.155-6.20180806git0a84d98
+- don't overwrite generic headers with 10bit on simdarch (rfbz#5071)
+
 * Tue May 07 2019 Sérgio Basto <sergio@serjux.com> - 0.155-5.20180806git0a84d98
 - Revert "Build /usr/bin/x264 with gpac shared lib instead static lib."
 
