@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 12%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -157,7 +157,7 @@ pushd ${variant}
 popd
 done
 %ifarch %{simdarch}
-for variant in simd simd10 ; do
+for variant in simd10 simd ; do
 pushd ${variant}
 %make_install
 rm %{buildroot}%{slibdir}/pkgconfig/x264.pc
@@ -207,6 +207,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Fri Oct 04 2019 Dominik Mierzejewski <rpm@greysector.net> - 0.157-12.20190717git34c06d1
+- don't overwrite generic headers with 10bit on simdarch (rfbz#5071)
+
 * Mon Aug 26 2019 Nicolas Chauvet <kwizart@gmail.com> - 0.157-11.20190717git34c06d1
 - Drop hack for arm builders
 
