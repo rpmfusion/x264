@@ -84,14 +84,14 @@ This package contains the development files.
 
 %global x_configure \
 %configure \\\
-	%{?_without_libavformat:--disable-lavf} \\\
-	%{?_without_libswscale:--disable-swscale} \\\
-	%{!?_with_ffmpegsource:--disable-ffms} \\\
-	--disable-opencl \\\
-	--disable-debug \\\
-	--enable-shared \\\
-	--system-libx264 \\\
-	--enable-pic
+    %{?_without_libavformat:--disable-lavf} \\\
+    %{?_without_libswscale:--disable-swscale} \\\
+    %{!?_with_ffmpegsource:--disable-ffms} \\\
+    --disable-opencl \\\
+    --disable-debug \\\
+    --enable-shared \\\
+    --system-libx264 \\\
+    --enable-pic
 
 %prep
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
@@ -114,16 +114,16 @@ done
 %build
 pushd generic
 %{x_configure}\
-	%{?_without_asm:--disable-asm}
+    %{?_without_asm:--disable-asm}
 
 %make_build
 popd
 
 pushd generic10
 %{x_configure}\
-	%{?_without_asm:--disable-asm}\
-	--disable-cli\
-	--bit-depth=10
+    %{?_without_asm:--disable-asm}\
+    --disable-cli\
+    --bit-depth=10
 
 %make_build
 popd
@@ -131,16 +131,16 @@ popd
 %ifarch %{simdarch}
 pushd simd
 %{x_configure}\
-	--libdir=%{slibdir}
+    --libdir=%{slibdir}
 
 %make_build
 popd
 
 pushd simd10
 %{x_configure}\
-	--disable-cli\
-	--libdir=%{slibdir}\
-	--bit-depth=10
+    --disable-cli\
+    --libdir=%{slibdir}\
+    --bit-depth=10
 
 %make_build
 popd
