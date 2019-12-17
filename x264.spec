@@ -7,7 +7,7 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-%global _with_bootstrap 1
+#global _with_bootstrap 1
 
 %{?_with_bootstrap:
 %global _without_gpac 1
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -207,6 +207,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Tue Dec 17 2019 Leigh Scott <leigh123linux@googlemail.com> - 0.159-3.20191127git1771b55
+- Rebuild without bootstrap
+
 * Tue Dec 17 2019 Leigh Scott <leigh123linux@googlemail.com> - 0.159-2.20191127git1771b55_bootstrap
 - DO A BOOTSTRAP BUILD
 
