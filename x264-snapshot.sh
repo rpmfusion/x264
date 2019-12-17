@@ -28,10 +28,10 @@ API="$(grep '#define X264_BUILD' < x264.h | sed 's/^.* \([1-9][0-9]*\).*$/\1/')"
 date=$(git log -1 --format=%cd --date=short | tr -d \-)
 git add version.h
 git commit -m "generated version.h" version.h
-git archive --prefix="${package}-0.$API-${date}-${tag}/" --format=tar rpmfusion | bzip2 > "$pwd"/${package}-0.$API-${date}-${tag}.tar.bz2
+git archive --prefix="${package}-0.$API-${date}git${tag}/" --format=tar rpmfusion | bzip2 > "$pwd"/${package}-0.$API-${date}git${tag}.tar.bz2
 popd >/dev/null
 
-echo \# globals for x264-0.$API-$date-$tag.tar.bz2
+echo \# globals for x264-0.$API-${date}git${tag}.tar.bz2
 echo %global api $API
 echo %global gitdate ${date}
 echo %global gitversion ${tag}

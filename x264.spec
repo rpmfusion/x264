@@ -1,9 +1,9 @@
-# globals for x264-0.157-20190717-34c06d1.tar.bz2
-%global api 157
-%global gitdate 20190717
-%global gitversion 34c06d1
+# globals for x264-0.159-20191127git1771b55.tar.bz2
+%global api 159
+%global gitdate 20191127
+%global gitversion 1771b55
 
-%global snapshot %{gitdate}-%{gitversion}
+%global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 12%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -207,6 +207,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Dec 16 2019 Sérgio Monteiro Basto <sergio@serjux.com> - 0.159-1.20191127git1771b55
+- Update to 0.159-20191127-git1771b55 (stable branch)
+
 * Fri Oct 04 2019 Dominik Mierzejewski <rpm@greysector.net> - 0.157-12.20190717git34c06d1
 - don't overwrite generic headers with 10bit on simdarch (rfbz#5071)
 
