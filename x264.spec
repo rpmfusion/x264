@@ -1,7 +1,7 @@
-# globals for x264-0.159-20191127git1771b55.tar.bz2
+# globals for x264-0.159-20200409git296494a.tar.bz2
 %global api 159
-%global gitdate 20191127
-%global gitversion 1771b55
+%global gitdate 20200409
+%global gitversion 296494a
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -117,7 +117,7 @@ pushd generic
 %{x_configure}\
     %{?_without_asm:--disable-asm}
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 pushd generic10
@@ -127,7 +127,7 @@ pushd generic10
     --disable-opencl \
     --bit-depth=10
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 %ifarch %{simdarch}
@@ -135,7 +135,7 @@ pushd simd
 %{x_configure}\
     --libdir=%{slibdir}
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 
 pushd simd10
@@ -145,7 +145,7 @@ pushd simd10
     --disable-opencl \
     --bit-depth=10
 
-%{__make} %{?_smp_mflags}
+%make_build
 popd
 %endif
 
@@ -207,6 +207,10 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed Jun 10 2020 Sérgio Basto <sergio@serjux.com> - 0.159-8.20200409git296494a
+- Update to 0.159-20200409git296494a (stable branch)
+- Replace all __make _smp_mflags by make_build macro
+
 * Thu Mar 12 2020 Leigh Scott <leigh123linux@gmail.com> - 0.159-7.20191127git1771b55
 - Rebuilt for i686
 
