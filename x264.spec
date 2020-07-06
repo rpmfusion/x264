@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -43,6 +43,7 @@ Patch0: x264-nover.patch
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
 Patch11: x264-opencl.patch
+Patch12: 7c2004b58c26da661618262c9c06b73ad3a9ff6c.diff
 
 BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
@@ -100,6 +101,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
 %patch11 -p1 -b .opencl
+%patch12 -p1 -b .gpac8
 popd
 
 variants="generic generic10"
@@ -207,6 +209,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Jul 06 2020 Sérgio Basto <sergio@serjux.com> - 0.159-9.20200409git296494a
+- Fix detection of gpac
+
 * Wed Jun 10 2020 Sérgio Basto <sergio@serjux.com> - 0.159-8.20200409git296494a
 - Update to 0.159-20200409git296494a (stable branch)
 - Replace all __make _smp_mflags by make_build macro
