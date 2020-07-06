@@ -31,7 +31,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 10%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -46,7 +46,7 @@ Patch11: x264-opencl.patch
 Patch12: 7c2004b58c26da661618262c9c06b73ad3a9ff6c.diff
 
 BuildRequires: gcc
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
@@ -209,6 +209,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Jul 06 2020 Sérgio Basto <sergio@serjux.com> - 0.159-10.20200409git296494a
+- Fix detection of gpac try 2
+
 * Mon Jul 06 2020 Sérgio Basto <sergio@serjux.com> - 0.159-9.20200409git296494a
 - Fix detection of gpac
 
