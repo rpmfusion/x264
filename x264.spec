@@ -178,9 +178,9 @@ execstack -c %{buildroot}%{_libdir}/libx264{,10b}.so.%{api}
 install -dm755 %{buildroot}%{_pkgdocdir}
 install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 
-%post libs -p /sbin/ldconfig
 
-%postun libs -p /sbin/ldconfig
+%ldconfig_scriptlets libs
+
 
 %files
 %{_bindir}/x264
