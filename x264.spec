@@ -14,6 +14,16 @@
 %global _without_libavformat 1
 %global _without_libswscale  1
 }
+
+# Reduce dependencies to build x264-libs on i686
+%if 0%{?fedora}
+%ifarch i686
+%global _without_gpac 1
+%global _without_libavformat 1
+%global _without_libswscale  1
+%endif
+%endif
+
 #Whitelist of arches with dedicated ASM code
 %global asmarch x86_64 armv7hl armv7hnl ppc64le aarch64
 # list of arches where ASM must be optional
