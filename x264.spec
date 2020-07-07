@@ -1,7 +1,7 @@
-# globals for x264-0.159-20200409git296494a.tar.bz2
-%global api 159
-%global gitdate 20200409
-%global gitversion 296494a
+# globals for x264-0.160-20200702gitcde9a93.tar.bz2
+%global api 160
+%global gitdate 20200702
+%global gitversion cde9a93
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -41,7 +41,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 11%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -56,7 +56,7 @@ Patch11: x264-opencl.patch
 Patch12: 7c2004b58c26da661618262c9c06b73ad3a9ff6c.diff
 
 BuildRequires: gcc
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel}
+%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel libglvnd-devel mesa-libGLU-devel faad2-devel libmad-devel xvidcore-devel a52dec-devel libvorbis-devel libtheora-devel openjpeg2-devel }
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
@@ -219,6 +219,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Mon Jul 06 2020 Sérgio Basto <sergio@serjux.com> - 0.160-1.20200702gitcde9a93
+- Update to 0.160-20200702gitcde9a93 (stable branch)
+
 * Mon Jul 06 2020 Nicolas Chauvet <kwizart@gmail.com> - 0.159-11.20200409git296494a
 - Bump
 

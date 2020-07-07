@@ -5,7 +5,7 @@
      gpac="no"
      GPAC_LIBS="-lgpac_static"
 -    cc_check "" -lz && GPAC_LIBS="$GPAC_LIBS -lz"
-+    for lib in -lz -lssl -lcrypto -lpng -ljpeg -ldl -llzma -lgpac -lGL -lGLU -lavdevice -lavfilter -lfaad -lmad -lxvidcore -la52 -lvorbis -ltheora -lopenjpeg; do
++    for lib in -lz -lssl -lcrypto -lpng -ljpeg -ldl -llzma -lgpac -lGL -lGLU -lavdevice -lavfilter -lfaad -lmad -lxvidcore -la52 -lvorbis -ltheora -lopenjp2; do
 +        cc_check "" $lib && GPAC_LIBS="$GPAC_LIBS $lib"
 +    done
      if [ "$SYS" = "WINDOWS" ] ; then

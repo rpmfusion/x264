@@ -3,7 +3,7 @@ index 51c896e901c5d4bb3ac4408e005380f64fb8f230..78aa11404e414db6168aef920e7e6bda
 --- a/configure
 +++ b/configure
 @@ -1232,15 +1232,16 @@ if [ "$gpac" = "auto" -a "$lsmash" != "yes" ] ; then
-     for lib in -lz -lssl -lcrypto -lpng -ljpeg -ldl -llzma -lgpac -lGL -lGLU -lavdevice -lavfilter -lfaad -lmad -lxvidcore -la52 -lvorbis -ltheora -lopenjpeg; do
+     for lib in -lz -lssl -lcrypto -lpng -ljpeg -ldl -llzma -lgpac -lGL -lGLU -lavdevice -lavfilter -lfaad -lmad -lxvidcore -la52 -lvorbis -ltheora -lopenjp2; do
          cc_check "" $lib && GPAC_LIBS="$GPAC_LIBS $lib"
      done
 +    cc_check "" -ldl && GPAC_LIBS="$GPAC_LIBS -ldl"
