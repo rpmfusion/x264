@@ -1,7 +1,7 @@
-# globals for x264-0.160-20200702gitcde9a93.tar.bz2
-%global api 160
-%global gitdate 20200702
-%global gitversion cde9a93
+# globals for x264-0.161-20200912gitd198931.tar.bz2
+%global api 161
+%global gitdate 20200912
+%global gitversion d198931
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -41,7 +41,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -53,10 +53,9 @@ Patch0: x264-nover.patch
 Patch1: x264-10b.patch
 Patch10: x264-gpac.patch
 Patch11: x264-opencl.patch
-Patch12: 7c2004b58c26da661618262c9c06b73ad3a9ff6c.diff
 
 BuildRequires: gcc
-%{!?_without_gpac:BuildRequires: gpac-devel-static zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel libglvnd-devel mesa-libGLU-devel faad2-devel libmad-devel xvidcore-devel a52dec-devel libvorbis-devel libtheora-devel openjpeg2-devel }
+%{!?_without_gpac:BuildRequires: gpac-static >= 1.0.1 zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel libglvnd-devel mesa-libGLU-devel faad2-devel libmad-devel xvidcore-devel a52dec-devel libvorbis-devel libtheora-devel openjpeg2-devel }
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
@@ -111,7 +110,6 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch1 -p1 -b .10b
 %patch10 -p1 -b .gpac
 %patch11 -p1 -b .opencl
-%patch12 -p1 -b .gpac8
 popd
 
 variants="generic generic10"
@@ -219,6 +217,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Wed Nov 18 2020 Sérgio Basto <sergio@serjux.com> - 0.161-1.20200912gitd198931
+- Update x264 to api 0.161 (stable branch)
+
 * Wed Aug 19 2020 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.160-2.20200702gitcde9a93
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
