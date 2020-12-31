@@ -41,7 +41,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -217,6 +217,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %endif
 
 %changelog
+* Thu Dec 31 2020 Leigh Scott <leigh123linux@gmail.com> - 0.161-2.20200912gitd198931
+- Rebuilt for new ffmpeg snapshot
+
 * Wed Nov 18 2020 Sérgio Basto <sergio@serjux.com> - 0.161-1.20200912gitd198931
 - Update x264 to api 0.161 (stable branch)
 
