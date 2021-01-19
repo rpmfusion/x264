@@ -308,7 +308,7 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 * Wed Nov 07 2018 Stefan Becker <chemobejk@gmail.com> - 0.155-2.20180806git0a84d98
 - reverse order of generic/generic10 install to fix -devel contents (rfbz #5071)
 
-* Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 0.155-8.20180806git0a84d98
+* Thu Oct 04 2018 Sérgio Basto <sergio@serjux.com> - 0.155-1.20180806git0a84d98
 - Update x264 to 0.155
 - Rebase x264-10b.patch
 - Add a patch to fix linking with --system-libx264 on x86
