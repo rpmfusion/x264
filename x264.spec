@@ -86,7 +86,13 @@ scratch.
 This package contains the development files.
 
 %global x_configure \
-%configure \\\
+./configure \\\
+    --host=%{_host} \\\
+    --prefix=%{_prefix} \\\
+    --exec-prefix=%{_exec_prefix} \\\
+    --bindir=%{_bindir} \\\
+    --includedir=%{_includedir} \\\
+    --libdir=%{_libdir} \\\
     %{?_without_libavformat:--disable-lavf} \\\
     %{?_without_libswscale:--disable-swscale} \\\
     %{!?_with_ffmpegsource:--disable-ffms} \\\
@@ -111,6 +117,7 @@ done
 
 
 %build
+%set_build_flags
 pushd generic
 %{x_configure}\
     %{?_without_asm:--disable-asm}
@@ -172,6 +179,7 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %changelog
 * Tue Jan 19 2021 Dominik Mierzejewski <rpm@greysector.net> - 0.161-3.20200912gitd198931
 - Drop non-asm build for i686 and ppc64 (rfbz#5855)
+- Use set_build_flags instead of configure macro for non-autotools script (rfbz#5854)
 
 * Thu Dec 31 2020 Leigh Scott <leigh123linux@gmail.com> - 0.161-2.20200912gitd198931
 - Rebuilt for new ffmpeg snapshot
