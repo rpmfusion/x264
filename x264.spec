@@ -25,23 +25,15 @@
 %endif
 
 #Whitelist of arches with dedicated ASM code
-%global asmarch x86_64 armv7hl armv7hnl ppc64le aarch64
-# list of arches where ASM must be optional
-%global simdarch i686 ppc64
+%global asmarch aarch64 armv7hl armv7hnl i686 ppc64 ppc64le x86_64
 %ifnarch %{asmarch}
 %global _without_asm 1
-%endif
-%ifarch i686
-%global slibdir %{_libdir}/sse2
-%endif
-%ifarch ppc64
-%global slibdir %{_libdir}/altivec
 %endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -62,7 +54,7 @@ BuildRequires: gcc
 %ifarch armv7hl armv7hnl
 BuildRequires: execstack
 %endif
-%ifarch %{asmarch} %{simdarch}
+%ifarch %{asmarch}
 BuildRequires: nasm
 %endif
 # we need to enforce the exact EVR for an ISA - not only the same ABI
@@ -112,11 +104,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 %patch11 -p1 -b .opencl
 popd
 
-variants="generic generic10"
-%ifarch %{simdarch}
-variants="$variants simd simd10"
-%endif
-for variant in $variants ; do
+for variant in generic generic10 ; do
   rm -rf ${variant}
   cp -pr %{name}-0.%{api}-%{snapshot} ${variant}
 done
@@ -140,25 +128,6 @@ pushd generic10
 %make_build
 popd
 
-%ifarch %{simdarch}
-pushd simd
-%{x_configure}\
-    --libdir=%{slibdir}
-
-%make_build
-popd
-
-pushd simd10
-%{x_configure}\
-    --disable-cli\
-    --libdir=%{slibdir}\
-    --disable-opencl \
-    --bit-depth=10
-
-%make_build
-popd
-%endif
-
 %install
 # NOTE: the order is important here! We want the generic devel stuff
 for variant in generic10 generic ; do
@@ -166,14 +135,6 @@ pushd ${variant}
 %make_install
 popd
 done
-%ifarch %{simdarch}
-for variant in simd10 simd ; do
-pushd ${variant}
-%make_install
-rm %{buildroot}%{slibdir}/pkgconfig/x264.pc
-popd
-done
-%endif
 
 #Fix timestamp on x264 generated headers
 touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
@@ -199,10 +160,6 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %license %{_pkgdocdir}/COPYING
 %{_libdir}/libx264.so.%{api}
 %{_libdir}/libx26410b.so.%{api}
-%ifarch %{simdarch}
-%{slibdir}/libx264.so.%{api}
-%{slibdir}/libx26410b.so.%{api}
-%endif
 
 %files devel
 %doc generic/doc/*
@@ -211,12 +168,11 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/libx264.so
 %{_libdir}/libx26410b.so
 %{_libdir}/pkgconfig/%{name}.pc
-%ifarch %{simdarch}
-%{slibdir}/libx264.so
-%{slibdir}/libx26410b.so
-%endif
 
 %changelog
+* Tue Jan 19 2021 Dominik Mierzejewski <rpm@greysector.net> - 0.161-3.20200912gitd198931
+- Drop non-asm build for i686 and ppc64 (rfbz#5855)
+
 * Thu Dec 31 2020 Leigh Scott <leigh123linux@gmail.com> - 0.161-2.20200912gitd198931
 - Rebuilt for new ffmpeg snapshot
 
