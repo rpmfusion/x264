@@ -1,7 +1,7 @@
-# globals for x264-0.161-20200912gitd198931.tar.bz2
+# globals for x264-0.161-20210124git544c61f.tar.bz2
 %global api 161
-%global gitdate 20200912
-%global gitversion d198931
+%global gitdate 20210124
+%global gitversion 544c61f
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 4%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -177,6 +177,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Jan 24 2021 Sérgio Basto <sergio@serjux.com> - 0.161-4.20210124git544c61f
+- Update to 0.161-20210124git544c61f (stable branch)
+
 * Tue Jan 19 2021 Dominik Mierzejewski <rpm@greysector.net> - 0.161-3.20200912gitd198931
 - Drop non-asm build for i686 and ppc64 (rfbz#5855)
 - Use set_build_flags instead of configure macro for non-autotools script (rfbz#5854)
