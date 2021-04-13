@@ -35,3 +35,9 @@ echo \# globals for x264-0.$API-${date}git${tag}.tar.bz2
 echo %global api $API
 echo %global gitdate ${date}
 echo %global gitversion ${tag}
+echo
+echo rpmdev-bumpspec -c \"Update to x264-0.$API-${date}git${tag} \(stable branch\)\" x264.spec
+echo rfpkg scratch-build --srpm --arches x86_64
+echo rfpkg new-sources x264-0.$API-${date}git${tag}.tar.bz2
+echo rfpkg ci -c
+

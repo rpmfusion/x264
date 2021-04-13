@@ -1,7 +1,7 @@
-# globals for x264-0.161-20210124git544c61f.tar.bz2
+# globals for x264-0.161-20210412git55d517b.tar.bz2
 %global api 161
-%global gitdate 20210124
-%global gitversion 544c61f
+%global gitdate 20210412
+%global gitversion 55d517b
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 5%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -177,6 +177,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Apr 13 2021 Sérgio Basto <sergio@serjux.com> - 0.161-6.20210412git55d517b
+- Update to x264-0.161-20210412git55d517b (stable branch)
+
 * Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 0.161-5.20210124git544c61f
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
