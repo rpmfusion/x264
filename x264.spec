@@ -1,7 +1,7 @@
-# globals for x264-0.161-20210412git55d517b.tar.bz2
-%global api 161
-%global gitdate 20210412
-%global gitversion 55d517b
+# globals for x264-0.163-20210613git5db6aa6.tar.bz2
+%global api 163
+%global gitdate 20210613
+%global gitversion 5db6aa6
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -43,7 +43,6 @@ Source1: x264-snapshot.sh
 Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
-Patch10: x264-gpac.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
@@ -106,7 +105,6 @@ This package contains the development files.
 pushd %{name}-0.%{api}-%{snapshot}
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
-%patch10 -p1 -b .gpac
 %patch11 -p1 -b .opencl
 popd
 
@@ -177,6 +175,10 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Jun 14 2021 Sérgio Basto <sergio@serjux.com> - 0.163-1.20210613git5db6aa6
+- x264-0.163-20210613git5db6aa6 soname bump
+- gpac patch accepted upstream with modifications
+
 * Tue Apr 13 2021 Sérgio Basto <sergio@serjux.com> - 0.161-6.20210412git55d517b
 - Update to x264-0.161-20210412git55d517b (stable branch)
 
