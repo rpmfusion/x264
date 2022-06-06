@@ -1,7 +1,7 @@
-# globals for x264-0.163-20210613git5db6aa6.tar.bz2
-%global api 163
-%global gitdate 20210613
-%global gitversion 5db6aa6
+# globals for x264-0.164-20220602gitbaee400f.tar.bz2
+%global api 164
+%global gitdate 20220602
+%global gitversion baee400f
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -177,6 +177,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Jun 06 2022 Sérgio Basto <sergio@serjux.com> - 0.164-1.20220602gitbaee400f
+- Update to x264-0.164-20220602gitbaee400f (stable branch)
+
 * Sat Mar 05 2022 Sérgio Basto <sergio@serjux.com> - 0.163-6.20210613git5db6aa6
 - Rebuild for new gpac on F36
 
