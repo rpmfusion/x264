@@ -38,6 +38,7 @@ License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
+Source2: version.h
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
@@ -103,6 +104,7 @@ This package contains the development files.
 %prep
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
 pushd %{name}-0.%{api}-%{snapshot}
+cp %{SOURCE2} .
 %patch0 -p1 -b .nover
 %patch1 -p1 -b .10b
 %patch11 -p1 -b .opencl
