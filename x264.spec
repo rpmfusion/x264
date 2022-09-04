@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 3%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -178,6 +178,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Sep 04 2022 Leigh Scott <leigh123linux@gmail.com> - 0.164-3.20220602gitbaee400f
+- Add requires ffmpeg-libs
+
 * Mon Aug 08 2022 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.164-2.20220602gitbaee400f
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild and ffmpeg
   5.1
