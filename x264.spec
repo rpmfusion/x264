@@ -59,6 +59,7 @@ BuildRequires: nasm
 %endif
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
+Requires: ffmpeg-libs%{?_isa}
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
