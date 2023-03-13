@@ -15,10 +15,10 @@
 %global _without_libswscale  1
 }
 
-%global _without_gpac 1
 # Reduce dependencies to build x264-libs on i686
 %if 0%{?fedora}
 %ifarch i686
+%global _without_gpac 1
 %global _without_libavformat 1
 %global _without_libswscale  1
 %endif
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -178,6 +178,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Mon Mar 13 2023 Leigh Scott <leigh123linux@gmail.com> - 0.164-7.20220602gitbaee400f
+- Rebuild for gpac
+
 * Tue Feb 28 2023 Sérgio Basto <sergio@serjux.com> - 0.164-6.20220602gitbaee400f
 - Disable build with gpac until we can build gapc with ffmepg-6
 
