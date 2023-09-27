@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 8%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -57,6 +57,7 @@ BuildRequires: execstack
 %ifarch %{asmarch}
 BuildRequires: nasm
 %endif
+BuildRequires: bash-completion
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: ffmpeg-libs%{?_isa}
@@ -106,9 +107,9 @@ This package contains the development files.
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
 pushd %{name}-0.%{api}-%{snapshot}
 cp %{SOURCE2} .
-%patch0 -p1 -b .nover
-%patch1 -p1 -b .10b
-%patch11 -p1 -b .opencl
+%patch -P0 -p1 -b .nover
+%patch -P1 -p1 -b .10b
+%patch -P11 -p1 -b .opencl
 popd
 
 for variant in generic generic10 ; do
@@ -161,6 +162,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 
 %files
 %{_bindir}/x264
+%dir %{_datadir}/bash-completion
+%dir %{_datadir}/bash-completion/completions
+%{_datadir}/bash-completion/completions/x264
 
 %files libs
 %dir %{_pkgdocdir}
@@ -178,6 +182,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Sep 27 2023 Sérgio Basto <sergio@serjux.com> - 0.164-9.20220602gitbaee400f
+- [Bug 6769] Include bash completion definitions for x264
+
 * Wed Aug 02 2023 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.164-8.20220602gitbaee400f
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
