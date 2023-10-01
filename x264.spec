@@ -1,7 +1,7 @@
-# globals for x264-0.164-20220602gitbaee400f.tar.bz2
+# globals for x264-0.164-20231001git31e19f92.tar.bz2
 %global api 164
-%global gitdate 20220602
-%global gitversion baee400f
+%global gitdate 20231001
+%global gitversion 31e19f92
 
 %global snapshot %{gitdate}git%{gitversion}
 %global gver .%{gitdate}git%{gitversion}
@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 9%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 10%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -182,6 +182,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Oct 01 2023 Sérgio Basto <sergio@serjux.com> - 0.164-10.20231001git31e19f92
+- Update to x264-0.164-20231001git31e19f92 (stable branch)
+
 * Wed Sep 27 2023 Sérgio Basto <sergio@serjux.com> - 0.164-9.20220602gitbaee400f
 - [Bug 6769] Include bash completion definitions for x264
 
