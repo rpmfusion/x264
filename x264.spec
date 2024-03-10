@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 12%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 13%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -44,6 +44,8 @@ Source2: version.h
 Patch0: x264-nover.patch
 # add 10b suffix to high bit depth build
 Patch1: x264-10b.patch
+# fix assignment from incompatible pointer type errors
+Patch2: x264-altivec-incompatible-pointer-type.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
@@ -57,7 +59,7 @@ BuildRequires: execstack
 %ifarch %{asmarch}
 BuildRequires: nasm
 %endif
-BuildRequires: bash-completion
+BuildRequires: pkgconfig(bash-completion)
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: ffmpeg-libs%{?_isa}
@@ -109,6 +111,7 @@ pushd %{name}-0.%{api}-%{snapshot}
 cp %{SOURCE2} .
 %patch -P0 -p1 -b .nover
 %patch -P1 -p1 -b .10b
+%patch -P2 -p1 -b .ptr
 %patch -P11 -p1 -b .opencl
 popd
 
@@ -182,6 +185,10 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Mar 10 2024 Dominik Mierzejewski <dominik@greysector.net> - 0.164-13.20231001git31e19f92
+- Fix "assignment from incompatible pointer type" errors on ppc64le
+- Use correct build dependency on bash-completion
+
 * Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.164-12.20231001git31e19f92
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
