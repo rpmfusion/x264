@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 14%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 15%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -185,6 +185,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Oct 08 2024 Nicolas Chauvet <kwizart@gmail.com> - 0.164-15.20231001git31e19f92
+- Rebuilt
+
 * Fri Aug 02 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 0.164-14.20231001git31e19f92
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_41_Mass_Rebuild
 
