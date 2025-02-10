@@ -23,6 +23,10 @@
 %global _without_libswscale  1
 %endif
 %endif
+# Gpac dependencies aren't available on el10
+%if 0%{?rhel}
+%global _without_gpac 1
+%endif
 
 #Whitelist of arches with dedicated ASM code
 %global asmarch aarch64 armv7hl armv7hnl i686 ppc64 ppc64le x86_64
