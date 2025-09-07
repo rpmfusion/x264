@@ -37,7 +37,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 1%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 2%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -183,6 +183,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Sep 07 2025 Sérgio Basto <sergio@serjux.com> - 0.165-2.20250608gitb35605ac
+- Bump version after unbootstrap
+
 * Wed Sep 03 2025 Sérgio Basto <sergio@serjux.com> - 0.165-1.20250608gitb35605ac_bootstrap
 - x264-0.165-20250608gitb35605ac soname bump
 - Remove ldconfig_scriptlets, deprecated since Fedora 28
