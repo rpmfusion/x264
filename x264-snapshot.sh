@@ -20,11 +20,11 @@ pushd "$tmp"
 git clone https://code.videolan.org/videolan/x264.git -b ${branch}
 
 cd ${package}
-tag=$(git rev-list HEAD -n 1 | cut -c 1-8)
+tag=$(git rev-parse --short=8 HEAD)
 git checkout ${commit}
 ./version.sh > "$pwd"/version.h
 API="$(grep '#define X264_BUILD' < x264.h | sed 's/^.* \([1-9][0-9]*\).*$/\1/')"
-date=$(git log -1 --format=%cd --date=short | tr -d \-)
+date=$(git log -1 --format=%cd --date=format:%Y%m%d)
 git archive --prefix="${package}-0.$API-${date}git${tag}/" --format=tar ${branch} | bzip2 > "$pwd"/${package}-0.$API-${date}git${tag}.tar.bz2
 popd >/dev/null
 
