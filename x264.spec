@@ -123,7 +123,9 @@ done
 
 
 %build
-%set_build_flags
+%ifarch %{ix86}
+export LDFLAGS+=' -Wl,-z,notext'
+%endif
 pushd generic
 %{x_configure}\
     %{?_without_asm:--disable-asm}
