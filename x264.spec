@@ -37,7 +37,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 5%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -46,8 +46,6 @@ Source2: version.h
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
-# add 10b suffix to high bit depth build
-Patch1: x264-10b.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
@@ -91,76 +89,47 @@ scratch.
 
 This package contains the development files.
 
-%global x_configure \
-./configure \\\
-    --host=%{_host} \\\
-    --prefix=%{_prefix} \\\
-    --exec-prefix=%{_exec_prefix} \\\
-    --bindir=%{_bindir} \\\
-    --includedir=%{_includedir} \\\
-    --libdir=%{_libdir} \\\
-    %{?_without_libavformat:--disable-lavf} \\\
-    %{?_without_libswscale:--disable-swscale} \\\
-    %{!?_with_ffmpegsource:--disable-ffms} \\\
-    --enable-debug \\\
-    --enable-shared \\\
-    --system-libx264 \\\
-    --enable-pic
-
 %prep
-%setup -q -c -n %{name}-0.%{api}-%{snapshot}
-pushd %{name}-0.%{api}-%{snapshot}
+%setup -q -n %{name}-0.%{api}-%{snapshot}
 cp %{SOURCE2} .
 %patch -P0 -p1 -b .nover
-%patch -P1 -p1 -b .10b
 %patch -P11 -p1 -b .opencl
-popd
-
-for variant in generic generic10 ; do
-  rm -rf ${variant}
-  cp -pr %{name}-0.%{api}-%{snapshot} ${variant}
-done
-
 
 %build
 %ifarch %{ix86}
 export LDFLAGS+=' -Wl,-z,notext'
 %endif
-pushd generic
-%{x_configure}\
-    %{?_without_asm:--disable-asm}
+./configure \
+    --host=%{_host} \
+    --prefix=%{_prefix} \
+    --exec-prefix=%{_exec_prefix} \
+    --bindir=%{_bindir} \
+    --includedir=%{_includedir} \
+    --libdir=%{_libdir} \
+    %{?_without_asm:--disable-asm} \
+    %{?_without_libavformat:--disable-lavf} \
+    %{?_without_libswscale:--disable-swscale} \
+    %{!?_with_ffmpegsource:--disable-ffms} \
+    --enable-debug \
+    --enable-shared \
+    --system-libx264 \
+    --enable-pic
 
 %make_build
-popd
-
-pushd generic10
-%{x_configure}\
-    %{?_without_asm:--disable-asm}\
-    --disable-cli\
-    --disable-opencl \
-    --bit-depth=10
-
-%make_build
-popd
 
 %install
-# NOTE: the order is important here! We want the generic devel stuff
-for variant in generic10 generic ; do
-pushd ${variant}
 %make_install
-popd
-done
 
 #Fix timestamp on x264 generated headers
-touch -r generic/version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
+touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
 %ifarch armv7hl armv7hnl
-execstack -c %{buildroot}%{_libdir}/libx264{,10b}.so.%{api}
+execstack -c %{buildroot}%{_libdir}/libx264.so.%{api}
 %endif
 
 install -dm755 %{buildroot}%{_pkgdocdir}
-install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
+install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 
 
 %files
@@ -174,17 +143,18 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_pkgdocdir}/AUTHORS
 %license %{_pkgdocdir}/COPYING
 %{_libdir}/libx264.so.%{api}
-%{_libdir}/libx26410b.so.%{api}
 
 %files devel
-%doc generic/doc/*
+%doc doc/*
 %{_includedir}/x264.h
 %{_includedir}/x264_config.h
 %{_libdir}/libx264.so
-%{_libdir}/libx26410b.so
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Sun Mar 01 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-6.20250608gitb35605ac
+- stop building separate 10-bit depth version, the main one supports all bit depths
+
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
 
