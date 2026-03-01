@@ -51,7 +51,7 @@ Patch11: x264-opencl.patch
 BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-static}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
-%{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
+%{?_with_ffmpegsource:BuildRequires: ffms2-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
 %ifarch armv7hl armv7hnl
 BuildRequires: execstack
@@ -155,6 +155,7 @@ install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 * Sun Mar 01 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-6.20250608gitb35605ac
 - stop building separate 10-bit depth version, the main one supports all bit depths
 - drop unnecessary BuildRequires
+- correct ffms2 BuildRequires
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
