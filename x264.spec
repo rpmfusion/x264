@@ -49,7 +49,7 @@ Patch0: x264-nover.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
-%{!?_without_gpac:BuildRequires: gpac-static >= 1.0.1 zlib-devel openssl-devel libpng-devel libjpeg-devel xz-devel libglvnd-devel mesa-libGLU-devel faad2-devel libmad-devel xvidcore-devel a52dec-devel libvorbis-devel libtheora-devel openjpeg2-devel }
+%{!?_without_gpac:BuildRequires: gpac-static}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffmpegsource-devel}
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
@@ -154,6 +154,7 @@ install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 %changelog
 * Sun Mar 01 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-6.20250608gitb35605ac
 - stop building separate 10-bit depth version, the main one supports all bit depths
+- drop unnecessary BuildRequires
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
