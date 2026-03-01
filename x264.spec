@@ -46,6 +46,8 @@ Source2: version.h
 
 # don't remove config.h and don't re-run version.sh
 Patch0: x264-nover.patch
+# fix tests on ppc64le
+Patch1: https://code.videolan.org/videolan/x264/-/merge_requests/196.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
@@ -89,6 +91,7 @@ This package contains the development files.
 %setup -q -n %{name}-0.%{api}-%{snapshot}
 cp %{SOURCE2} .
 %patch -P0 -p1 -b .nover
+%patch -P1 -p1 -b .ppc64le
 %patch -P11 -p1 -b .opencl
 
 %build
@@ -154,6 +157,7 @@ done
 - correct ffms2 BuildRequires
 - drop ARMv7 support
 - run tests
+- fix tests on ppc64le
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
