@@ -29,7 +29,7 @@
 %endif
 
 #Whitelist of arches with dedicated ASM code
-%global asmarch aarch64 armv7hl armv7hnl i686 ppc64 ppc64le x86_64
+%global asmarch aarch64 i686 ppc64 ppc64le x86_64
 %ifnarch %{asmarch}
 %global _without_asm 1
 %endif
@@ -52,10 +52,6 @@ BuildRequires: gcc
 %{!?_without_gpac:BuildRequires: gpac-static}
 %{!?_without_libavformat:BuildRequires: ffmpeg-devel}
 %{?_with_ffmpegsource:BuildRequires: ffms2-devel}
-# https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
-%ifarch armv7hl armv7hnl
-BuildRequires: execstack
-%endif
 %ifarch %{asmarch}
 BuildRequires: nasm
 %endif
@@ -123,11 +119,6 @@ export LDFLAGS+=' -Wl,-z,notext'
 #Fix timestamp on x264 generated headers
 touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/x264_config.h
 
-# https://bugzilla.rpmfusion.org/show_bug.cgi?id=3975
-%ifarch armv7hl armv7hnl
-execstack -c %{buildroot}%{_libdir}/libx264.so.%{api}
-%endif
-
 install -dm755 %{buildroot}%{_pkgdocdir}
 install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 
@@ -156,6 +147,7 @@ install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 - stop building separate 10-bit depth version, the main one supports all bit depths
 - drop unnecessary BuildRequires
 - correct ffms2 BuildRequires
+- drop ARMv7 support
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
