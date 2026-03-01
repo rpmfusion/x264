@@ -122,6 +122,11 @@ touch -r version.h %{buildroot}%{_includedir}/x264.h %{buildroot}%{_includedir}/
 install -dm755 %{buildroot}%{_pkgdocdir}
 install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 
+%check
+for b in 8 10 ; do
+%make_build checkasm${b}
+./checkasm${b}
+done
 
 %files
 %{_bindir}/x264
@@ -148,6 +153,7 @@ install -pm644 AUTHORS COPYING %{buildroot}%{_pkgdocdir}/
 - drop unnecessary BuildRequires
 - correct ffms2 BuildRequires
 - drop ARMv7 support
+- run tests
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
