@@ -11,7 +11,7 @@
 %bcond ffmpegsource 0
 
 %ifnarch i686
-%if 0%{?rhel} < 10
+%if 0%{?rhel} && 0%{?rhel} < 10
 %bcond gpac 0
 %else
 %bcond gpac %{without bootstrap}
@@ -35,7 +35,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?dist}
+Release: 7%{?gver}%{?dist}
 # code is under GPLv2+ except for the bundled OpenCL headers
 License: GPL-2.0-or-later and Khronos
 URL: https://www.videolan.org/developers/x264.html
@@ -164,6 +164,9 @@ done
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Mar 03 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-7.20250608gitb35605ac
+- fix gpac conditional
+
 * Sun Mar 01 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-6.20250608gitb35605ac
 - stop building separate 10-bit depth version, the main one supports all bit depths
 - drop unnecessary BuildRequires
