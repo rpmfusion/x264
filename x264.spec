@@ -7,38 +7,37 @@
 %global gver .%{gitdate}git%{gitversion}
 %global branch stable
 
-#global _with_bootstrap 1
+%bcond bootstrap 0
+%bcond ffmpegsource 0
 
-%{?_with_bootstrap:
-%global _without_gpac 1
-%global _without_libavformat 1
-%global _without_libswscale  1
-}
-
+%ifnarch i686
+%if 0%{?rhel} < 10
+%bcond gpac 0
+%else
+%bcond gpac %{without bootstrap}
+%endif
+%bcond ffmpeg %{without bootstrap}
+%else
 # Reduce dependencies to build x264-libs on i686
-%if 0%{?fedora}
-%ifarch i686
-%global _without_gpac 1
-%global _without_libavformat 1
-%global _without_libswscale  1
-%endif
-%endif
-# Gpac dependencies aren't available on el10
-%if 0%{?rhel}
-%global _without_gpac 1
+%global _pkg_extra_ldflags "-Wl,-z,notext"
+%bcond gpac 0
+%bcond ffmpeg 0
 %endif
 
 #Whitelist of arches with dedicated ASM code
 %global asmarch aarch64 i686 ppc64 ppc64le x86_64
-%ifnarch %{asmarch}
-%global _without_asm 1
+%ifarch %{asmarch}
+%bcond asm 1
+%else
+%bcond asm 0
 %endif
 
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
-License: GPLv2+
+Release: 6%{?gver}%{?dist}
+# code is under GPLv2+ except for the bundled OpenCL headers
+License: GPL-2.0-or-later and Khronos
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
 Source1: x264-snapshot.sh
@@ -51,16 +50,27 @@ Patch1: https://code.videolan.org/videolan/x264/-/merge_requests/196.patch
 Patch11: x264-opencl.patch
 
 BuildRequires: gcc
-%{!?_without_gpac:BuildRequires: gpac-static}
-%{!?_without_libavformat:BuildRequires: ffmpeg-devel}
-%{?_with_ffmpegsource:BuildRequires: ffms2-devel}
+%if %{with gpac}
+BuildRequires: gpac-static
+%endif
+%if %{with ffmpeg}
+BuildRequires: pkgconfig(libavformat)
+BuildRequires: pkgconfig(libavcodec)
+BuildRequires: pkgconfig(libavutil)
+BuildRequires: pkgconfig(libswscale)
+%endif
+%if %{with ffmpegsource}
+BuildRequires: ffms2-devel
+%endif
 %ifarch %{asmarch}
 BuildRequires: nasm
 %endif
 BuildRequires: pkgconfig(bash-completion)
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
-%{!?_with_bootstrap:Requires: ffmpeg-libs%{?_isa}}
+%if %{without bootstrap}
+Requires: (ffmpeg-libs%{?_isa} or libavcodec-freeworld%{?_isa})
+%endif
 
 %description
 x264 is a free library for encoding H264/AVC video streams, written from
@@ -95,25 +105,28 @@ cp %{SOURCE2} .
 %patch -P11 -p1 -b .opencl
 
 %build
-%ifarch %{ix86}
-export LDFLAGS+=' -Wl,-z,notext'
-%endif
 ./configure \
+    --enable-lto \
     --host=%{_host} \
     --prefix=%{_prefix} \
     --exec-prefix=%{_exec_prefix} \
     --bindir=%{_bindir} \
     --includedir=%{_includedir} \
     --libdir=%{_libdir} \
-    %{?_without_asm:--disable-asm} \
-    %{?_without_libavformat:--disable-lavf} \
-    %{?_without_libswscale:--disable-swscale} \
-    %{!?_with_ffmpegsource:--disable-ffms} \
+%if %{without asm}
+    --disable-asm \
+%endif
+%if %{without ffmpeg}
+    --disable-lavf \
+    --disable-swscale \
+%endif
+%if %{without ffmpegsource}
+    --disable-ffms \
+%endif
     --enable-debug \
     --enable-shared \
     --system-libx264 \
     --enable-pic
-
 %make_build
 
 %install
@@ -158,6 +171,7 @@ done
 - drop ARMv7 support
 - run tests
 - fix tests on ppc64le
+- modernize spec
 
 * Sat Feb 14 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-5.20250608gitb35605ac
 - rebuilt for gpac-26.02
