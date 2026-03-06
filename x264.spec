@@ -69,7 +69,7 @@ BuildRequires: pkgconfig(bash-completion)
 # we need to enforce the exact EVR for an ISA - not only the same ABI
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 %if %{without bootstrap}
-Requires: (ffmpeg-libs%{?_isa} or libavcodec-freeworld%{?_isa})
+Requires: libavcodec-freeworld%{?_isa}
 %endif
 
 %description
