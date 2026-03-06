@@ -35,7 +35,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 7%{?gver}%{?dist}
+Release: 8%{?gver}%{?dist}
 # code is under GPLv2+ except for the bundled OpenCL headers
 License: GPL-2.0-or-later and Khronos
 URL: https://www.videolan.org/developers/x264.html
@@ -164,6 +164,9 @@ done
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Mar 06 2026 Nicolas Chauvet <kwizart@gmail.com> - 0.165-8.20250608gitb35605ac
+- Avoid boolean dependency
+
 * Tue Mar 03 2026 Dominik Mierzejewski <dominik@greysector.net> - 0.165-7.20250608gitb35605ac
 - fix gpac conditional
 
