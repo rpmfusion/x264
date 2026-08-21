@@ -35,7 +35,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 9%{?gver}%{?dist}
+Release: 10%{?gver}%{?dist}
 # code is under GPLv2+ except for the bundled OpenCL headers
 License: GPL-2.0-or-later and Khronos
 URL: https://www.videolan.org/developers/x264.html
@@ -164,6 +164,9 @@ done
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Aug 21 2026 Leigh Scott <leigh123linux@gmail.com> - 0.165-10.20250608gitb35605ac
+- Rebuild for new ffmpeg
+
 * Sun Aug 02 2026 RPM Fusion Release Engineering <leigh123linux@rpmfusion.org> - 0.165-9.20250608gitb35605ac
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_45_Mass_Rebuild
 
