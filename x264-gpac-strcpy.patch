@@ -1,0 +1,23 @@
+--- a/x264.c
++++ b/x264.c
+@@ -66,7 +66,20 @@
+ #endif
+ 
+ #if HAVE_GPAC
++/* GPAC >= 26.07 poisons strcpy/strcat/strncpy/strncat via gpac/setup.h
++ * unless GPAC_ALLOW_UNSAFE_STRFUNC is defined first: it redefines them
++ * to expand to a bare "#error ..." token sequence, which breaks any
++ * later legitimate use of these functions in this translation unit
++ * (e.g. the strcpy() call in select_input() below), since the
++ * poisoning macros stay in effect for the rest of the file. Allow the
++ * unsafe funcs for the include, then undef immediately after so libc's
++ * real strcpy/strcat/strncpy/strncat are restored for our own code. */
++#define GPAC_ALLOW_UNSAFE_STRFUNC
+ #include <gpac/isomedia.h>
++#undef strcpy
++#undef strcat
++#undef strncpy
++#undef strncat
+ #endif
+ 
+ #if HAVE_LSMASH

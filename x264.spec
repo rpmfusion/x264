@@ -48,6 +48,7 @@ Patch0: x264-nover.patch
 # fix tests on ppc64le
 Patch1: https://code.videolan.org/videolan/x264/-/merge_requests/196.patch
 Patch11: x264-opencl.patch
+Patch12: x264-gpac-strcpy.patch
 
 BuildRequires: gcc
 %if %{with gpac}
@@ -103,6 +104,7 @@ cp %{SOURCE2} .
 %patch -P0 -p1 -b .nover
 %patch -P1 -p1 -b .ppc64le
 %patch -P11 -p1 -b .opencl
+%patch -P12 -p1 -b .gpac-strcpy
 
 %build
 ./configure \
