@@ -33,7 +33,7 @@
 Summary: H264/AVC video streams encoder
 Name: x264
 Version: 0.%{api}
-Release: 6%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
+Release: 7%{?gver}%{?_with_bootstrap:_bootstrap}%{?dist}
 License: GPLv2+
 URL: https://www.videolan.org/developers/x264.html
 Source0: %{name}-0.%{api}-%{snapshot}.tar.bz2
@@ -103,9 +103,9 @@ This package contains the development files.
 %prep
 %setup -q -c -n %{name}-0.%{api}-%{snapshot}
 pushd %{name}-0.%{api}-%{snapshot}
-%patch0 -p1 -b .nover
-%patch1 -p1 -b .10b
-%patch11 -p1 -b .opencl
+%patch -P 0 -p1 -b .nover
+%patch -P 1 -p1 -b .10b
+%patch -P 11 -p1 -b .opencl
 popd
 
 for variant in generic generic10 ; do
@@ -175,6 +175,9 @@ install -pm644 generic/{AUTHORS,COPYING} %{buildroot}%{_pkgdocdir}/
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Sep 22 2026 Nicolas Chauvet <kwizart@gmail.com> - 0.163-7.20210613git5db6aa6
+- Rebuilt
+
 * Sat Mar 05 2022 Sérgio Basto <sergio@serjux.com> - 0.163-6.20210613git5db6aa6
 - Rebuild for new gpac on F36
 
